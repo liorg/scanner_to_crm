@@ -155,6 +155,7 @@
     </Compile>
     <Content Include="App.ico" />
     <Content Include="HTML\UpgradeLog.htm" />
+    <Content Include="HTML\UpgradeLog.XML" />
     <EmbeddedResource Include="Form\frmStartScan.resx">
       <DependentUpon>frmStartScan.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,6 +169,7 @@
       <DependentUpon>frmScanner.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Docs\SCANERaDDoN.docx" />
     <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />
     <None Include="Web References\Crmdiscovery\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
