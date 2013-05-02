@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testdotnettwain", "testdotnettwain.csproj", "{1CCFF470-C24C-45FC-8ABF-55630354DAE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureConnection", "SecureConnection\SecureConnection\SecureConnection.csproj", "{B9994894-48F8-4754-86AC-715FB1B7EA7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CCFF470-C24C-45FC-8ABF-55630354DAE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCFF470-C24C-45FC-8ABF-55630354DAE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CCFF470-C24C-45FC-8ABF-55630354DAE3}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCFF470-C24C-45FC-8ABF-55630354DAE3}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B9994894-48F8-4754-86AC-715FB1B7EA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9994894-48F8-4754-86AC-715FB1B7EA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9994894-48F8-4754-86AC-715FB1B7EA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9994894-48F8-4754-86AC-715FB1B7EA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
