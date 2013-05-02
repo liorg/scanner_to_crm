@@ -129,12 +129,6 @@
     <Compile Include="Mechanism\Twain\TwainLib.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Form\ViewScanner.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\ViewScanner.Designer.cs">
-      <DependentUpon>ViewScanner.cs</DependentUpon>
-    </Compile>
     <Compile Include="Web References\Crmdiscovery\Reference.cs">
       <DependentUpon>Reference.map</DependentUpon>
       <SubType>code</SubType>
