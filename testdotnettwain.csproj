@@ -103,9 +103,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Form\FormBase\FormBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form\frmStartScan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,7 +112,9 @@
     <Compile Include="old\Form2.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\frmScanner.cs" />
+    <Compile Include="Form\frmScanner.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form\frmScanner.Designer.cs">
       <DependentUpon>frmScanner.cs</DependentUpon>
     </Compile>
@@ -130,7 +129,9 @@
     <Compile Include="Mechanism\Twain\TwainLib.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Form\ViewScanner.cs" />
+    <Compile Include="Form\ViewScanner.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form\ViewScanner.Designer.cs">
       <DependentUpon>ViewScanner.cs</DependentUpon>
     </Compile>
