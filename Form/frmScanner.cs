@@ -9,6 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using testdotnettwain.Mechanism.GDI;
 using TwainLib;
 
 namespace testdotnettwain
@@ -18,7 +21,7 @@ namespace testdotnettwain
 
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
-        ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+        
         IntPtr bmpptr;
         IntPtr pixptr;
         static string ObjectId = string.Empty;
@@ -80,9 +83,15 @@ namespace testdotnettwain
                             tw.CloseSrc();
                             string strFileName;
                             strFileName = "";
+                            TiffBitmapEncoder encoder = new TiffBitmapEncoder();
+                           
+                            //encoder.Frames.Add(imageFrame);
+                            //encoder.Save(output);
+
                             //MODI.DocumentClass doc = new MODI.DocumentClass();
                             //MODI.DocumentClass page ;
                             //doc.Create(String.Empty);
+                            BitmapFrame frame;
                             for (int i = 0; i < pics.Count; i++)
                             {
                                 IntPtr img = (IntPtr)pics[i];
@@ -104,7 +113,7 @@ namespace testdotnettwain
                                 }
 
                                 strFileName = TmpFolder + "\\" + Environment.MachineName + i.ToString() + DateTime.Now.Millisecond + ".tiff";
-                                GetCodecClsid(strFileName, out clsid);
+                                GdiWin32.GetCodecClsid(strFileName, out clsid);
                                 IntPtr img2 = IntPtr.Zero;
                                 GdiWin32.GdipCreateBitmapFromGdiDib(bmpptr, pixptr, ref img2);
                                 GdiWin32.GdipSaveImageToFile(img2, strFileName, ref clsid, IntPtr.Zero);
@@ -135,6 +144,15 @@ namespace testdotnettwain
                                 //page.Close(false);
                                 //System.Runtime.InteropServices.Marshal.ReleaseComObject(page);
 
+                                BitmapSource image = Imaging.CreateBitmapSourceFromBitmap(bp);
+                               
+              
+                                frame = BitmapFrame.Create(image);
+                                
+                                 if (frame != null)
+                                 {
+                                     encoder.Frames.Add(frame);
+                                 }
                                 GC.Collect();
                                 GC.WaitForPendingFinalizers();
                                 GC.Collect();
@@ -150,6 +168,9 @@ namespace testdotnettwain
                             string OldFileName = strFileName;
                             strFileName += ".new.tiff";
                             string strNewFileName = TmpFolder + "\\" + Environment.MachineName + DateTime.Now.Millisecond + ".tiff";
+                            FileStream output = new FileStream(TmpFolder + "\\new.tif", FileMode.OpenOrCreate);
+                            encoder.Save(output);
+                            
                             //doc.SaveAs(strFileName,MODI.MiFILE_FORMAT.miFILE_FORMAT_TIFF,MODI.MiCOMP_LEVEL.miCOMP_LEVEL_LOW);
                             //doc.SaveAs(strNewFileName,MODI.MiFILE_FORMAT.miFILE_FORMAT_TIFF,MODI.MiCOMP_LEVEL.miCOMP_LEVEL_LOW);
 
@@ -221,24 +242,6 @@ namespace testdotnettwain
             this.Activate();
         }
 
-        private bool GetCodecClsid(string filename, out Guid clsid)
-        {
-            clsid = Guid.Empty;
-            string ext = Path.GetExtension(filename);
-            if (ext == null)
-                return false;
-            ext = "*" + ext.ToUpper();
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FilenameExtension.IndexOf(ext) >= 0)
-                {
-                    clsid = codec.Clsid;
-                    return true;
-                }
-            }
-            return false;
-        }
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -255,6 +258,11 @@ namespace testdotnettwain
             //    //    GC.WaitForPendingFinalizers();
             //    //}
             //}
+            if (tw != null)
+            {
+                tw.Finish();
+            }
+
             base.Dispose(disposing);
         }
 

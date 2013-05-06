@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -86,5 +88,23 @@ namespace testdotnettwain
                 return null; // failure 
         }
 
+        public static bool GetCodecClsid(string filename, out Guid clsid)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            clsid = Guid.Empty;
+            string ext = Path.GetExtension(filename);
+            if (ext == null)
+                return false;
+            ext = "*" + ext.ToUpper();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FilenameExtension.IndexOf(ext) >= 0)
+                {
+                    clsid = codec.Clsid;
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
