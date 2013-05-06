@@ -84,7 +84,7 @@ namespace testdotnettwain
                             string strFileName;
                             strFileName = "";
                             TiffBitmapEncoder encoder = new TiffBitmapEncoder();
-                           
+                         
                             //encoder.Frames.Add(imageFrame);
                             //encoder.Save(output);
 
