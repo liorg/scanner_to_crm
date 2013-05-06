@@ -168,6 +168,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Docs\SCANERaDDoN.docx" />
+    <None Include="Docs\twain 2.2 spec.pdf" />
     <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />
     <None Include="Web References\Crmdiscovery\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
