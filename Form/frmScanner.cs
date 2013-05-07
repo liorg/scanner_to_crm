@@ -19,7 +19,7 @@ namespace testdotnettwain
 {
     public partial class frmScanner : Form, IMessageFilter
     {
-
+        public event Action<frmScanner, string, bool> Finish;
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
         
@@ -42,7 +42,7 @@ namespace testdotnettwain
         {
             tw = new Twain();
             tw.Init(this.Handle);
-            if (_configManager.ShowScanner == "1")
+            if (_configManager.ShowScanners == ConfigManager.TRUE)
             {
                 tw.Select();
             }
@@ -87,6 +87,9 @@ namespace testdotnettwain
             return true;
         }
 
+        /// <summary>
+        /// GET Page After Page that's scanned
+        /// </summary>
         private void TransferReady()
         {
             try
@@ -101,7 +104,7 @@ namespace testdotnettwain
                 BitmapFrame frame;
                 if (!(pics != null && pics.Count != 0))
                 {
-                    MessageBox.Show(this, "No Has Any pages", "Guardian Information Systems");
+                    ShowException("No Has Any pages");
                     return;
                 }
                 CreateDirectory(tmpFolder);
@@ -137,50 +140,23 @@ namespace testdotnettwain
                 }
                var dtString= DateTime.Now.ToString("yyyymmddhhMMss");
 
-               strFileName = tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + "";
-            
-                strFileName += ".new.tiff";
-                string strNewFileName = tmpFolder + "\\" + Environment.MachineName + DateTime.Now.Millisecond + ".tiff";
-                _output = new FileStream(tmpFolder + "\\new.tif", FileMode.OpenOrCreate);
+               strFileName = tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
+
+               string strNewFileName = strFileName;
+                _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
                 encoder.Save(_output);
-
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                //doc = null;
-
-                //if (ScanSource == "0")
-                //    CrmUpdater(strFileName);
-
-                //else
-                //    ScanRegular(strFileName);
-
-                //try
-                //{
-
-
-                //    string tmpfile = @System.Configuration.ConfigurationSettings.AppSettings["FileServer"];
-                //    if (tmpfile != null && tmpfile != string.Empty)
-                //    {
-                //        File.Copy(strNewFileName, tmpfile + "\\" + ObjectInfo + ".tiff", true);
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(this, "Error : \r\n\r\n" + ex.Message.ToString() + "\r\n\r\n" + ex.StackTrace, "Guardian information system");
-                //}
-
-                MessageBox.Show(this, "Done", "Guardian Information Systems");
+                if (Finish != null)
+                {
+                    Finish(this, strNewFileName, true);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, "Error : \r\n\r\n" + ex.Message.ToString() + "\r\n\r\n" + ex.StackTrace, "Guardian information system");
-            }
-            finally
-            {
-                //Environment.Exit(0);
-                //Application.Exit();
             }
         }
 
@@ -196,15 +172,7 @@ namespace testdotnettwain
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-               // for manage code
-                _output.Dispose();
-            }
-            if (tw != null)
-            {
-                tw.Finish();
-            }
+            CloseResources(disposing);
             base.Dispose(disposing);
         }
 
@@ -213,10 +181,14 @@ namespace testdotnettwain
             Dispose(false);
         }
 
-        static private void ShowException(string message)
+         private void ShowException(string message)
         {
             MessageBox.Show(null, message, System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"], MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+            if (Finish != null)
+            {
+                Finish(this, "", false);
+            }
+         }
 
         private void CreateDirectory(string tmpFolder)
         {
@@ -233,5 +205,17 @@ namespace testdotnettwain
             }
         }
 
+        public void CloseResources(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_output != null)
+                {
+                    _output.Dispose();
+                }
+            }
+            if (tw != null)
+                tw.Finish();
+        }
     }
 }

@@ -5,8 +5,10 @@ using System.Text;
 
 namespace testdotnettwain.Mechanism
 {
+   
     public class ConfigManager
     {
+        public const string TRUE = "1";
         static ConfigManager _configManager;
         public static ConfigManager GetSinglton()
         {
@@ -16,13 +18,22 @@ namespace testdotnettwain.Mechanism
             }
             return _configManager;
         }
-        public string ShowScanner 
+        public string ShowScanners
         {
             get
             {
-                return @System.Configuration.ConfigurationSettings.AppSettings["ShowScanner"];
+                return @System.Configuration.ConfigurationSettings.AppSettings["ShowScanners"];
             }
         }
+
+        public string ShowScannedPages
+        {
+            get
+            {
+                return @System.Configuration.ConfigurationSettings.AppSettings["ShowScannedPages"];
+            }
+        }
+        
 
         public string TmpFolder
         {
@@ -31,6 +42,16 @@ namespace testdotnettwain.Mechanism
                 return @System.Configuration.ConfigurationSettings.AppSettings["tmpFolder"];
             }
         }
+
+        public string CloseScannerAuto
+        {
+            get
+            {
+                return @System.Configuration.ConfigurationSettings.AppSettings["CloseScannerAuto"];
+            }
+        }
+        
+
 
     }
 }

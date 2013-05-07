@@ -165,6 +165,11 @@ namespace TwainLib
             return pics;
         }
 
+        /// <summary>
+        /// Pass Message Message Queuing of API WIN32
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public TwainCommand PassMessage(ref Message m)
         {
             if (srcds.Id == IntPtr.Zero)
@@ -213,6 +218,9 @@ namespace TwainLib
             }
         }
 
+        /// <summary>
+        /// close resource of twian object
+        /// </summary>
         public void Finish()
         {
             TwRC rc;

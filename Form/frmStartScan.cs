@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using testdotnettwain.Mechanism;
 
 namespace testdotnettwain
 {
@@ -16,7 +17,7 @@ namespace testdotnettwain
 		private System.Windows.Forms.TextBox txtHeader;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
-
+        private ConfigManager _configManager;
         private frmScanner _frmmain;
 		/// <summary>
 		/// Required designer variable.
@@ -29,10 +30,7 @@ namespace testdotnettwain
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+            _configManager = ConfigManager.GetSinglton();
 		}
 
 		/// <summary>
@@ -122,7 +120,7 @@ namespace testdotnettwain
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "frmStartScan";
-            this.Text = "Guardian Scanner ver 2.0";
+            this.Text = "Guardian Scanner ver 3.0";
             this.Load += new System.EventHandler(this.frmStartScan_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -134,11 +132,42 @@ namespace testdotnettwain
 
 		private void BtnScan_Click(object sender, System.EventArgs e)
 		{
+            if (_frmmain != null)
+                _frmmain.Dispose();
             _frmmain = new frmScanner();
+            _frmmain.Finish += frmmain_Finish;
             _frmmain.Acquire();
 		}
 
+        void frmmain_Finish(frmScanner frmmain, string path, bool isSuccess)
+        {
+
+            if (isSuccess)
+            {
+                frmmain.CloseResources(true);
+                if (_configManager.CloseScannerAuto == ConfigManager.TRUE)
+                {
+                    Environment.Exit(0);
+                    Application.Exit();
+                }
+                if (_configManager.ShowScannedPages == ConfigManager.TRUE)
+                {
+                    using (var pages = new frmPages(path))
+                    {
+                        pages.ShowDialog();
+                    }
+                }
+                
+            }
+
+        }
+
         private void frmStartScan_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnShowPagesScanned_Click(object sender, EventArgs e)
         {
 
         }
