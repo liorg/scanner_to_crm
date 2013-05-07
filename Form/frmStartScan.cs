@@ -16,8 +16,8 @@ namespace testdotnettwain
 		private System.Windows.Forms.TextBox txtHeader;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
-		
-		
+
+        private frmScanner _frmmain;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -46,6 +46,10 @@ namespace testdotnettwain
 				{
 					components.Dispose();
 				}
+                if (_frmmain != null)
+                {
+                    _frmmain.Dispose();
+                }
 			}
 			base.Dispose( disposing );
 		}
@@ -79,7 +83,6 @@ namespace testdotnettwain
             this.txtNote.MaxLength = 500;
             this.txtNote.Multiline = true;
             this.txtNote.Name = "txtNote";
-           
             this.txtNote.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.txtNote.Size = new System.Drawing.Size(312, 88);
             this.txtNote.TabIndex = 8;
@@ -89,7 +92,6 @@ namespace testdotnettwain
             this.txtHeader.Location = new System.Drawing.Point(56, 8);
             this.txtHeader.MaxLength = 50;
             this.txtHeader.Name = "txtHeader";
-          
             this.txtHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.txtHeader.Size = new System.Drawing.Size(312, 20);
             this.txtHeader.TabIndex = 7;
@@ -98,18 +100,17 @@ namespace testdotnettwain
             // 
             this.label2.Location = new System.Drawing.Point(376, 40);
             this.label2.Name = "label2";
-            this.label2.Text = "מסמך";
             this.label2.Size = new System.Drawing.Size(64, 24);
             this.label2.TabIndex = 6;
+            this.label2.Text = "מסמך";
             // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(376, 8);
             this.label1.Name = "label1";
-            this.label1.Text = "כותרת";
-          
             this.label1.Size = new System.Drawing.Size(64, 24);
             this.label1.TabIndex = 5;
+            this.label1.Text = "כותרת";
             // 
             // frmStartScan
             // 
@@ -122,6 +123,7 @@ namespace testdotnettwain
             this.Controls.Add(this.label1);
             this.Name = "frmStartScan";
             this.Text = "Guardian Scanner ver 2.0";
+            this.Load += new System.EventHandler(this.frmStartScan_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,13 +134,13 @@ namespace testdotnettwain
 
 		private void BtnScan_Click(object sender, System.EventArgs e)
 		{
-
-
-            frmScanner frmmain = new frmScanner(this.txtHeader.Text, this.txtNote.Text);
-			
-			//frmmain.Show();
-			frmmain.Acquire();
-          //  frmmain.Dispose();
+            _frmmain = new frmScanner();
+            _frmmain.Acquire();
 		}
+
+        private void frmStartScan_Load(object sender, EventArgs e)
+        {
+
+        }
 	}
 }

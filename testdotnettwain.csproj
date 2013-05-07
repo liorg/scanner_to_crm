@@ -109,6 +109,7 @@
     <Compile Include="Form\frmStartScan.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Mechanism\Configuration\ConfigManager.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
     <Compile Include="old\Form1.cs">
       <SubType>Form</SubType>
