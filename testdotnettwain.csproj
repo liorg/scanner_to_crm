@@ -91,6 +91,8 @@
       <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services">
       <Name>System.Web.Services</Name>
     </Reference>
@@ -118,6 +120,7 @@
     <Compile Include="Mechanism\Configuration\ConfigManager.cs" />
     <Compile Include="Mechanism\Configuration\Utils.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
+    <Compile Include="Mechanism\UI\StreamWithProgress.cs" />
     <Compile Include="old\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +144,11 @@
     <Compile Include="Mechanism\Twain\TwainLib.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Service References\UploadLargeImages\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Web References\Crmdiscovery\Reference.cs">
       <DependentUpon>Reference.map</DependentUpon>
       <SubType>code</SubType>
@@ -162,6 +170,13 @@
     <Content Include="App.ico" />
     <Content Include="HTML\UpgradeLog.htm" />
     <Content Include="HTML\UpgradeLog.XML" />
+    <None Include="Service References\UploadLargeImages\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\UploadLargeImages\configuration.svcinfo" />
+    <None Include="Service References\UploadLargeImages\configuration91.svcinfo" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.disco" />
     <EmbeddedResource Include="Form\frmPages.resx">
       <DependentUpon>frmPages.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -181,6 +196,16 @@
     <None Include="app.config" />
     <None Include="Docs\SCANERaDDoN.docx" />
     <None Include="Docs\twain 2.2 spec.pdf" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.wsdl" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />
     <None Include="Web References\Crmdiscovery\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -226,7 +251,12 @@
       <UrlBehavior>Static</UrlBehavior>
     </WebReferenceUrl>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\UploadLargeImages\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent />

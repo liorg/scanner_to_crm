@@ -1,6 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testdotnettwain", "testdotnettwain.csproj", "{1CCFF470-C24C-45FC-8ABF-55630354DAE3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C1A2524E-9D28-45F3-854A-70532EEC7E40} = {C1A2524E-9D28-45F3-854A-70532EEC7E40}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScannerImagedService", "wcf\ScannerImagedService\ScannerImagedService.csproj", "{C1A2524E-9D28-45F3-854A-70532EEC7E40}"
 EndProject

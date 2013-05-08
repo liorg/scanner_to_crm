@@ -19,7 +19,7 @@ namespace testdotnettwain
 {
     public partial class frmScanner : Form, IMessageFilter
     {
-        public event Action<frmScanner, string, bool> Finish;
+        public event Action<frmScanner, string, bool,int> Finish;
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
         
@@ -108,7 +108,7 @@ namespace testdotnettwain
                     return;
                 }
                 CreateDirectory(tmpFolder);
-
+                int picsCount = pics.Count;
                 for (int i = 0; i < pics.Count; i++)
                 {
                     IntPtr img = (IntPtr)pics[i];
@@ -151,7 +151,7 @@ namespace testdotnettwain
                 GC.WaitForPendingFinalizers();
                 if (Finish != null)
                 {
-                    Finish(this, strNewFileName, true);
+                    Finish(this, strNewFileName, true, picsCount);
                 }
             }
             catch (Exception ex)
@@ -186,7 +186,7 @@ namespace testdotnettwain
             MessageBox.Show(null, message, System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"], MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (Finish != null)
             {
-                Finish(this, "", false);
+                Finish(this, "", false,0);
             }
          }
 
