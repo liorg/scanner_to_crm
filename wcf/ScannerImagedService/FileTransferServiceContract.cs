@@ -3,7 +3,7 @@
 using System;
 using System.ServiceModel;
 
-namespace ScannerImagedService
+namespace FileService
 {
     [ServiceContract]
     public interface IFileTransferService

@@ -224,8 +224,8 @@ namespace testdotnettwain
             try
             {
                 string textFile = @"C:\gili\new.tiff";
-                textFile = @"C:\gili\LIORGLAP20135707030543479.new.tiff";
-               //  textFile = @"C:\gili\largedata.bmp";
+            // textFile = @"C:\gili\LIORGLAP20135707030543479.new.tiff";
+            //  textFile = @"C:\gili\largedata.bmp";
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
 

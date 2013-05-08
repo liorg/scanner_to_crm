@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0a78c5de-5173-490b-b01a-32b4d076952b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f7012f9a-d595-4db0-9359-f83d93d81e14" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -21,11 +21,11 @@
     <MetadataSource Address="http://localhost:2013/ServiceFileTransferService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ServiceFileTransferService.wsdl" MetadataType="Wsdl" ID="d17de861-bbe0-4bc6-a1ba-d27b89f1bbbb" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?wsdl" />
-    <MetadataFile FileName="ServiceFileTransferService.xsd" MetadataType="Schema" ID="5c21bab3-395e-4c41-aa3b-06b5fcc79ada" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd2" />
-    <MetadataFile FileName="ServiceFileTransferService1.xsd" MetadataType="Schema" ID="b0070a90-0c95-4f17-b17f-f42e045b41b3" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd0" />
-    <MetadataFile FileName="ServiceFileTransferService.disco" MetadataType="Disco" ID="78fee9e3-2a0c-4aa5-9756-6ecff277c716" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?disco" />
-    <MetadataFile FileName="ServiceFileTransferService2.xsd" MetadataType="Schema" ID="ef4fd765-6aa1-4b33-a108-89f3012b5fa5" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ServiceFileTransferService.wsdl" MetadataType="Wsdl" ID="a52050c1-92d6-4b08-8124-27caa4c3dcff" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?wsdl" />
+    <MetadataFile FileName="ServiceFileTransferService.xsd" MetadataType="Schema" ID="9873d617-3479-4860-9911-18fe2c35845a" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ServiceFileTransferService1.xsd" MetadataType="Schema" ID="9976f94b-fd06-4ec2-8ddb-c71257dbe45f" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ServiceFileTransferService.disco" MetadataType="Disco" ID="03475437-c65e-45cd-bdee-20cfaeeaafed" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?disco" />
+    <MetadataFile FileName="ServiceFileTransferService2.xsd" MetadataType="Schema" ID="3d7e23d2-20da-40d1-80f4-aed485acb982" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
