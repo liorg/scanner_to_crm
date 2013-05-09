@@ -12,6 +12,13 @@ namespace testdotnettwain.Mechanism.GDI
 {
     public static class Imaging
     {
+
+        public static BitmapFrame GetBitmapFrame(Bitmap bitmap)
+        {
+            var image= CreateBitmapSourceFromBitmap(bitmap);
+            return BitmapFrame.Create(image);
+        }
+
         public static BitmapSource CreateBitmapSourceFromBitmap(Bitmap bitmap)
         {
             if (bitmap == null)
@@ -44,11 +51,6 @@ namespace testdotnettwain.Mechanism.GDI
                 return null;
             }
         }
-
-        //private static bool InvokeRequired
-        //{
-        //    get { return Dispatcher.CurrentDispatcher != Application.Current.Dispatcher; }
-        //}
 
         private static BitmapSource CreateBitmapSourceFromBitmap(Stream stream)
         {

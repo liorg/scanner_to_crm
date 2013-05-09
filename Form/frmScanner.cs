@@ -19,10 +19,10 @@ namespace testdotnettwain
 {
     public partial class frmScanner : Form, IMessageFilter
     {
-        public event Action<frmScanner, string, bool,int> Finish;
+        public event Action<frmScanner, string, bool, int> Finish;
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
-        
+
         IntPtr bmpptr;
         IntPtr pixptr;
         static string ObjectId = string.Empty;
@@ -46,11 +46,11 @@ namespace testdotnettwain
             {
                 tw.Select();
             }
-           
+
             this.Enabled = false;
-          
+
             Application.AddMessageFilter(this);
-            
+
             tw.Acquire();
         }
 
@@ -125,9 +125,7 @@ namespace testdotnettwain
 
                     GdiWin32.GdipDisposeImage(img2);
 
-                    BitmapSource image = Imaging.CreateBitmapSourceFromBitmap(bp);
-                    frame = BitmapFrame.Create(image);
-
+                    frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
                     {
                         encoder.Frames.Add(frame);
@@ -138,11 +136,9 @@ namespace testdotnettwain
                     GC.WaitForPendingFinalizers();
 
                 }
-               var dtString= DateTime.Now.ToString("yyyymmddhhMMss");
+                strFileName = GenerateFileTemp(tmpFolder);
 
-               strFileName = tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
-
-               string strNewFileName = strFileName;
+                string strNewFileName = strFileName;
                 _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
                 encoder.Save(_output);
                 GC.Collect();
@@ -181,18 +177,18 @@ namespace testdotnettwain
             Dispose(false);
         }
 
-         private void ShowException(string message)
+        private void ShowException(string message)
         {
             MessageBox.Show(null, message, System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"], MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (Finish != null)
             {
-                Finish(this, "", false,0);
+                Finish(this, message, false, 0);
             }
-         }
+        }
 
         private void CreateDirectory(string tmpFolder)
         {
-            if (!Directory.Exists( tmpFolder))
+            if (!Directory.Exists(tmpFolder))
             {
                 try
                 {
@@ -205,6 +201,12 @@ namespace testdotnettwain
             }
         }
 
+        private string GenerateFileTemp(string tmpFolder)
+        {
+             var dtString= DateTime.Now.ToString("yyyyMMddhhmmss");
+             return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
+        }
+    
         public void CloseResources(bool disposing)
         {
             if (disposing)
@@ -216,6 +218,7 @@ namespace testdotnettwain
             }
             if (tw != null)
                 tw.Finish();
+
         }
     }
 }

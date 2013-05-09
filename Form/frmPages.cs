@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using testdotnettwain.Mechanism;
+using testdotnettwain.Mechanism.WCFClient;
+using testdotnettwain.UploadLargeImages;
 
 /* Multipage tiff viewer
  * Created by Matjaž Grahek - 25.11.2008
@@ -26,12 +29,15 @@ namespace testdotnettwain
 {
     public partial class frmPages : Form
     {
-        public frmPages(string path)
+        Action<string> LogText;
+        string _path;
+        public frmPages(string path, Action<string> log)
         {
             InitializeComponent();
-
+            LogText = log;
             intCurrPage = 0; // reseting the counter
             lblFile.Text = path; // showing the file name in the lblFile
+            _path = path;
             RefreshImage(); // refreshing and showing the new file
             opened = true; // the files was opened.
            
@@ -93,7 +99,14 @@ namespace testdotnettwain
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            Upload(_path);
             Close();
+        }
+
+        private void Upload(string textFile)
+        {
+            WCFClientAdaptor clientUpload = new WCFClientAdaptor(LogText, Cursor, progressBar1);
+            clientUpload.Upload(textFile);
         }
     }
 }

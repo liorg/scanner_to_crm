@@ -121,6 +121,7 @@
     <Compile Include="Mechanism\Configuration\Utils.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
     <Compile Include="Mechanism\UI\StreamWithProgress.cs" />
+    <Compile Include="Mechanism\WCFClient\WCFClientAdaptor.cs" />
     <Compile Include="old\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

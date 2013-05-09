@@ -26,11 +26,11 @@ namespace testdotnettwain.Mechanism
             }
         }
 
-        public string ShowScannedPages
+        public string ShowPreview
         {
             get
             {
-                return @System.Configuration.ConfigurationSettings.AppSettings["ShowScannedPages"];
+                return @System.Configuration.ConfigurationSettings.AppSettings["ShowPreview"];
             }
         }
         
@@ -50,8 +50,16 @@ namespace testdotnettwain.Mechanism
                 return @System.Configuration.ConfigurationSettings.AppSettings["CloseScannerAuto"];
             }
         }
-        
 
+        public string DeleteFileAfterUploading
+        {
+            get
+            {
+                return @System.Configuration.ConfigurationSettings.AppSettings["DeleteFileAfterUploading"];
+            }
+        }
+        
+        
 
     }
 }

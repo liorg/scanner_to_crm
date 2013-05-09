@@ -38,14 +38,15 @@
             this.lblCurrPage = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(117, 682);
+            this.button1.Location = new System.Drawing.Point(118, 733);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 45);
+            this.button1.Size = new System.Drawing.Size(119, 28);
             this.button1.TabIndex = 0;
             this.button1.Text = "Previous Page";
             this.button1.UseVisualStyleBackColor = true;
@@ -53,9 +54,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(285, 683);
+            this.button2.Location = new System.Drawing.Point(285, 734);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(119, 44);
+            this.button2.Size = new System.Drawing.Size(119, 27);
             this.button2.TabIndex = 1;
             this.button2.Text = "Next Page";
             this.button2.UseVisualStyleBackColor = true;
@@ -65,7 +66,7 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(12, 72);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(645, 604);
+            this.pictureBox1.Size = new System.Drawing.Size(645, 626);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
@@ -121,19 +122,27 @@
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnClose.Location = new System.Drawing.Point(580, 682);
+            this.btnClose.Location = new System.Drawing.Point(435, 733);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 45);
+            this.btnClose.Size = new System.Drawing.Size(75, 28);
             this.btnClose.TabIndex = 9;
-            this.btnClose.Text = "OK";
+            this.btnClose.Text = "Upload";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 704);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(645, 23);
+            this.progressBar1.TabIndex = 12;
             // 
             // frmPages
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(677, 739);
+            this.ClientSize = new System.Drawing.Size(675, 773);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblCurrPage);
             this.Controls.Add(this.label3);
@@ -165,6 +174,7 @@
         private System.Windows.Forms.Label lblCurrPage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 
