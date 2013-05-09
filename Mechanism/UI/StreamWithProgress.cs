@@ -74,7 +74,7 @@ namespace testdotnettwain.Mechanism
             if (ProgressChanged != null) ProgressChanged(this, new ProgressChangedEventArgs(bytesRead, length));
             return result;
         }
-
+      
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new Exception("The method or operation is not implemented.");
