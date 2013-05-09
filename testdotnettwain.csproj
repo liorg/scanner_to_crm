@@ -258,9 +258,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\UploadLargeImages\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mechanism\WCFClient\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent />

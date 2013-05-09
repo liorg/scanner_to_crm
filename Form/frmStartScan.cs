@@ -224,10 +224,10 @@ namespace testdotnettwain
 
         private void BtnScan_Click(object sender, System.EventArgs e)
         {
-            LogText("Start Scanning...");
-           // backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
+           // LogText("Start Scanning...");
+           //backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
             //backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20134909100501252.new.tiff");
-            //return;
+            return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();
