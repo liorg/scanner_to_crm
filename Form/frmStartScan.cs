@@ -75,7 +75,7 @@ namespace testdotnettwain
             string textFile = e.Argument as string;
             try
             {
-                progressBar1.Value = 0;
+               
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
 
@@ -224,8 +224,9 @@ namespace testdotnettwain
 
         private void BtnScan_Click(object sender, System.EventArgs e)
         {
-           // LogText("Start Scanning...");
-           //backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
+            LogText("Start Scanning...");
+            progressBar1.Value = 0;
+           // backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
             //backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20134909100501252.new.tiff");
             return;
             if (_frmmain != null)

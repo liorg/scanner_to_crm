@@ -107,6 +107,7 @@ namespace testdotnettwain
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            progressBar1.Value = 0;
             Upload(_path);
 
         }
@@ -149,7 +150,6 @@ namespace testdotnettwain
             string textFile = e.Argument as string;
             try
             {
-                progressBar1.Value = 0;
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
 
