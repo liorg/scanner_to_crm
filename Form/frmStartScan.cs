@@ -22,7 +22,7 @@ namespace testdotnettwain
         private frmScanner _frmmain;
         private ProgressBar progressBar1;
         private ListBox LogListBox;
-
+        //declare the backgroundWorker
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
 
         /// <summary>
@@ -33,8 +33,9 @@ namespace testdotnettwain
         public frmStartScan()
         {
             InitializeComponent();
-
+            //init the backgroundWorker
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            //set this property for Progressing Monitor 
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
@@ -42,7 +43,9 @@ namespace testdotnettwain
           
             _configManager = ConfigManager.GetSinglton();
         }
-
+        /// <summary>
+        /// When it's Complete
+        /// </summary>
         void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
              LogText("Finish!");
@@ -63,13 +66,27 @@ namespace testdotnettwain
                 LogText("Error Occur!");
             }
         }
-
+        /// <summary>
+        /// Event Handler Streaming Progress
+        /// </summary>
+        void uploadStreamWithProgress_ProgressChanged(object sender, StreamWithProgress.ProgressChangedEventArgs e)
+        {
+            if (backgroundWorker1 != null)
+            {
+                backgroundWorker1.ReportProgress((int)(e.BytesRead * 100 / e.Length));
+            }
+        }
+        /// <summary>
+        /// Update UI Control ,our progressBar ,now it's safe to update progressBar1
+        /// </summary>
         void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Change the value of the ProgressBar to the BackgroundWorker progress.
             progressBar1.Value = e.ProgressPercentage;
         }
-
+        /// <summary>
+        /// Do Work on Asynchronous mode 
+        /// </summary>
         void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string textFile = e.Argument as string;
@@ -107,7 +124,8 @@ namespace testdotnettwain
                         
                         // close service client
                         client.Close();
-
+                        // Send Result to Complete Task event hanlder
+                        //(backgroundWorker1_RunWorkerCompleted)
                         e.Result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
                     } 
                 }
@@ -116,6 +134,9 @@ namespace testdotnettwain
             {
                 LogText("Exception : " + ex.Message);
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
+                // Send Result to Complete Task event hanlder
+                //(backgroundWorker1_RunWorkerCompleted)
+                      
                 e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
              
             }
@@ -124,7 +145,23 @@ namespace testdotnettwain
             }
 
         }
+       
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void LogText(string text)
+        {
+
+            if (LogListBox.InvokeRequired)
+            {
+                // Occur only when in async mode 
+                LogListBox.Invoke(new Action<string>(LogText), text);
+                return;
+            }
+            LogListBox.Items.Add(text);
+            LogListBox.SelectedIndex = LogListBox.Items.Count - 1;
+        }
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -226,9 +263,10 @@ namespace testdotnettwain
         {
             LogText("Start Scanning...");
             progressBar1.Value = 0;
+           // //excute the backgroundWorker  and putting argument 
            // backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
-            //backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20134909100501252.new.tiff");
-            return;
+           //// backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20134909100501252.new.tiff");
+           // return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();
@@ -285,23 +323,6 @@ namespace testdotnettwain
             }
         }
 
-        void uploadStreamWithProgress_ProgressChanged(object sender, StreamWithProgress.ProgressChangedEventArgs e)
-        {
-            if (backgroundWorker1 != null)
-            {
-                backgroundWorker1.ReportProgress((int)(e.BytesRead * 100 / e.Length));
-            }
-        }
-    
-        private void LogText(string text)
-        {
-            if (LogListBox.InvokeRequired)
-            {
-                LogListBox.Invoke(new Action<string>(LogText), text);
-                return;
-            }
-            LogListBox.Items.Add(text);
-            LogListBox.SelectedIndex = LogListBox.Items.Count - 1;
-        }
+        
     }
 }
