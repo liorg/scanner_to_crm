@@ -32,6 +32,7 @@ namespace testdotnettwain
         Action<string> LogText;
         string _path;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+
         public frmPages(string path, Action<string> log)
         {
             InitializeComponent();
@@ -175,8 +176,8 @@ namespace testdotnettwain
                             LogText("Upload To Server :UNKNWON");
                         }
                         // upload file
-                        client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress);
-
+                    //    client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress);
+                        client.UploadFile(fileInfo.Name, fileInfo.Length, Guid.NewGuid(), "12", uploadStreamWithProgress);
                         LogText("Done!");
 
                         // close service client
@@ -205,6 +206,11 @@ namespace testdotnettwain
             {
                 backgroundWorker1.ReportProgress((int)(e.BytesRead * 100 / e.Length));
             }
+        }
+
+        private void frmPages_Load(object sender, EventArgs e)
+        {
+
         }
     }
          

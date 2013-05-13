@@ -95,11 +95,13 @@ namespace testdotnettwain
             try
             {
                 string tmpFolder = _configManager.TmpFolder;
+                //tranfer each image and insert him to array
                 ArrayList pics = tw.TransferPictures();
                 EndingScan();
                 tw.CloseSrc();
                 string strFileName;
                 strFileName = "";
+                // encoder bitmap frames into one tiff image
                 TiffBitmapEncoder encoder = new TiffBitmapEncoder();
                 BitmapFrame frame;
                 if (!(pics != null && pics.Count != 0))
@@ -107,6 +109,7 @@ namespace testdotnettwain
                     ShowException("No Has Any pages");
                     return;
                 }
+                // create temp folder if not exesist
                 CreateDirectory(tmpFolder);
                 int picsCount = pics.Count;
                 for (int i = 0; i < pics.Count; i++)
@@ -121,6 +124,7 @@ namespace testdotnettwain
 
                     // GdiWin32.GdipCreateBitmapFromGdiDib(bmpptr, pixptr, ref img2);
                     // GdiWin32.GdipSaveImageToFile(img2, strFileName, ref clsid, IntPtr.Zero);
+                    // create bitmap type
                     Bitmap bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
 
                     GdiWin32.GdipDisposeImage(img2);
@@ -136,6 +140,7 @@ namespace testdotnettwain
                     GC.WaitForPendingFinalizers();
 
                 }
+                // genrate file name to temp folder 
                 strFileName = GenerateFileTemp(tmpFolder);
 
                 string strNewFileName = strFileName;
@@ -207,6 +212,10 @@ namespace testdotnettwain
              return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
         }
     
+        /// <summary>
+        /// Close Resources output filestream and twain global variable
+        /// </summary>
+        /// <param name="disposing">true is manage code</param>
         public void CloseResources(bool disposing)
         {
             if (disposing)

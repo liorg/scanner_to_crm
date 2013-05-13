@@ -27,6 +27,12 @@ namespace FileService
         [MessageBodyMember(Order = 1)]
         public System.IO.Stream FileByteStream;
 
+        [MessageHeader]
+        public Guid ObjId;
+
+        [MessageHeader]
+        public string ObjType;
+
         public void Dispose()
         {
             // close stream when the contract instance is disposed. this ensures that stream is closed when file download is complete, since download procedure is handled by the client and the stream must be closed on server.

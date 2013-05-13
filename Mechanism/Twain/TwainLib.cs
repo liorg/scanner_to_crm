@@ -105,9 +105,10 @@ namespace TwainLib
             }
 
             TwUserInterface guif = new TwUserInterface();
+            // show scanner view 
             guif.ShowUI = 0;
-
             guif.ModalUI = 0;
+
             guif.ParentHand = hwnd;
             rc = DSuserif(appid, srcds, TwDG.Control, TwDAT.UserInterface, TwMSG.EnableDS, guif);
             if (rc != TwRC.Success)

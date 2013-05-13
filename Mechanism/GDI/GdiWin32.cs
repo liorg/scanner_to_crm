@@ -49,6 +49,9 @@ namespace testdotnettwain
         [DllImport("gdiplus.dll", ExactSpelling = true)]
         internal static extern int GdipDisposeImage(IntPtr image);
 
+        /// <summary>
+        /// Get pixel info 
+        /// </summary>
         public static IntPtr GetPixelInfo(IntPtr bmpptr)
         {
             Rectangle bmprect = new Rectangle(0, 0, 0, 0);
@@ -71,7 +74,7 @@ namespace testdotnettwain
 
         public static Bitmap BitmapFromDIB(IntPtr pDIB, IntPtr pPix)
         {
-
+            //because it's static and not public we must to reflect him
             MethodInfo mi = typeof(Bitmap).GetMethod("FromGDIplus",
                             BindingFlags.Static | BindingFlags.NonPublic);
 
@@ -87,7 +90,12 @@ namespace testdotnettwain
             else
                 return null; // failure 
         }
-
+        /// <summary>
+        /// Get clsid by extension file
+        /// </summary>
+        /// <param name="filename">file name include extension</param>
+        /// <param name="clsid"></param>
+        /// <returns></returns>
         public static bool GetCodecClsid(string filename, out Guid clsid)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();

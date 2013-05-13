@@ -25,7 +25,7 @@ namespace FileService
             if (!System.IO.Directory.Exists(filePathSving)) System.IO.Directory.CreateDirectory(filePathSving);
           
             // kill target file, if already exists
-            string filePath = System.IO.Path.Combine(filePathSving, request.FileName);
+            string filePath = System.IO.Path.Combine(filePathSving, request.FileName + "_"+request.ObjType);
             if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
 
             int chunkSize = 2048;

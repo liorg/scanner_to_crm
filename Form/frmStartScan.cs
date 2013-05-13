@@ -117,9 +117,10 @@ namespace testdotnettwain
                         {
                             LogText("Upload To Server :UNKNWON");
                         }
-                        // upload file
-                        client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress);
 
+                        // upload file
+                        //client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress,Guid.NewGuid(),"12");
+                        client.UploadFile(fileInfo.Name, fileInfo.Length, Guid.NewGuid(), "12", uploadStreamWithProgress);
                         LogText("Done!");
                         
                         // close service client
@@ -263,10 +264,10 @@ namespace testdotnettwain
         {
             LogText("Start Scanning...");
             progressBar1.Value = 0;
-           // //excute the backgroundWorker  and putting argument 
-           // backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
-           //// backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20134909100501252.new.tiff");
-           // return;
+            //excute the backgroundWorker  and putting argument 
+        //   backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
+            backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20130509050340957.new.tiff");
+            return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();

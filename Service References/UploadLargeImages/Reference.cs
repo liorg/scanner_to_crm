@@ -32,15 +32,23 @@ namespace testdotnettwain.UploadLargeImages {
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://tempuri.org/")]
         public long Length;
         
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://tempuri.org/")]
+        public System.Guid ObjId;
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://tempuri.org/")]
+        public string ObjType;
+        
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
         public System.IO.Stream FileByteStream;
         
         public RemoteFileInfo() {
         }
         
-        public RemoteFileInfo(string FileName, long Length, System.IO.Stream FileByteStream) {
+        public RemoteFileInfo(string FileName, long Length, System.Guid ObjId, string ObjType, System.IO.Stream FileByteStream) {
             this.FileName = FileName;
             this.Length = Length;
+            this.ObjId = ObjId;
+            this.ObjType = ObjType;
             this.FileByteStream = FileByteStream;
         }
     }
@@ -87,10 +95,12 @@ namespace testdotnettwain.UploadLargeImages {
             return base.Channel.UploadFile(request);
         }
         
-        public void UploadFile(string FileName, long Length, System.IO.Stream FileByteStream) {
+        public void UploadFile(string FileName, long Length, System.Guid ObjId, string ObjType, System.IO.Stream FileByteStream) {
             testdotnettwain.UploadLargeImages.RemoteFileInfo inValue = new testdotnettwain.UploadLargeImages.RemoteFileInfo();
             inValue.FileName = FileName;
             inValue.Length = Length;
+            inValue.ObjId = ObjId;
+            inValue.ObjType = ObjType;
             inValue.FileByteStream = FileByteStream;
             testdotnettwain.UploadLargeImages.UploadFileResponse retVal = ((testdotnettwain.UploadLargeImages.IFileTransferService)(this)).UploadFile(inValue);
         }

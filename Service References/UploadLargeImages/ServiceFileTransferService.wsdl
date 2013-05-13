@@ -20,6 +20,8 @@
   <wsdl:message name="RemoteFileInfo_Headers">
     <wsdl:part name="FileName" element="tns:FileName" />
     <wsdl:part name="Length" element="tns:Length" />
+    <wsdl:part name="ObjId" element="tns:ObjId" />
+    <wsdl:part name="ObjType" element="tns:ObjType" />
   </wsdl:message>
   <wsdl:message name="IFileTransferService_UploadFile_OutputMessage" />
   <wsdl:portType name="IFileTransferService">
@@ -36,6 +38,8 @@
       <wsdl:input name="RemoteFileInfo">
         <soap:header message="tns:RemoteFileInfo_Headers" part="FileName" use="literal" />
         <soap:header message="tns:RemoteFileInfo_Headers" part="Length" use="literal" />
+        <soap:header message="tns:RemoteFileInfo_Headers" part="ObjId" use="literal" />
+        <soap:header message="tns:RemoteFileInfo_Headers" part="ObjType" use="literal" />
         <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output>
