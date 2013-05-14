@@ -87,55 +87,47 @@ namespace testdotnettwain
             return true;
         }
 
-        /// <summary>
-        /// GET Page After Page that's scanned
-        /// </summary>
+       /// <summary>
+        /// Transfer Ready To Scan0
+       /// </summary>
         private void TransferReady()
         {
             try
             {
                 string tmpFolder = _configManager.TmpFolder;
-                //tranfer each image and insert him to array
+                //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication  
                 ArrayList pics = tw.TransferPictures();
-                EndingScan();
-                tw.CloseSrc();
-                string strFileName;
-                strFileName = "";
-                // encoder bitmap frames into one tiff image
-                TiffBitmapEncoder encoder = new TiffBitmapEncoder();
+                EndingScan();    tw.CloseSrc();
+                string strFileName = "";
+                // join all the images that's scanned  to one image tiff file
+                var encoder = new TiffBitmapEncoder();
                 BitmapFrame frame;
                 if (!(pics != null && pics.Count != 0))
                 {
                     ShowException("No Has Any pages");
                     return;
                 }
-                // create temp folder if not exesist
+                // create temp folder 
                 CreateDirectory(tmpFolder);
                 int picsCount = pics.Count;
                 for (int i = 0; i < pics.Count; i++)
                 {
                     IntPtr img = (IntPtr)pics[i];
+                    //Locks a global memory object and returns a pointer to the first byte of the object's memory block
                     bmpptr = GdiWin32.GlobalLock(img);
+                    //Get Pixel Info by handle
                     pixptr = GdiWin32.GetPixelInfo(bmpptr);
                     Guid clsid;
-
+                    // get clsId GUIID by extension file (*.tiff)
                     GdiWin32.GetCodecClsid(strFileName, out clsid);
-                    IntPtr img2 = IntPtr.Zero;
-
-                    // GdiWin32.GdipCreateBitmapFromGdiDib(bmpptr, pixptr, ref img2);
-                    // GdiWin32.GdipSaveImageToFile(img2, strFileName, ref clsid, IntPtr.Zero);
                     // create bitmap type
                     Bitmap bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
-
-                    GdiWin32.GdipDisposeImage(img2);
-
+                    
                     frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
                     {
                         encoder.Frames.Add(frame);
                     }
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
 
@@ -148,10 +140,9 @@ namespace testdotnettwain
                 encoder.Save(_output);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
                 if (Finish != null)
                 {
+                    // dispatch event to client
                     Finish(this, strNewFileName, true, picsCount);
                 }
             }
