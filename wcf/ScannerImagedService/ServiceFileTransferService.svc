@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="FileService.ServiceFileTransferService" CodeBehind="ServiceFileTransferService.svc.cs" %>
