@@ -71,7 +71,15 @@ namespace testdotnettwain
             p = (p * 4) + bmi.biSize + (int)bmpptr;
             return (IntPtr)p;
         }
-
+        // Convert a DIB* to a System.Drawing.Bitmap
+        // This is useful for scanner APIs that provide a DIB*.
+        // A dot.net app can more easily work with System.Drawing.Bitmap.
+        // Example usage:
+        //   IntPtr pDib = GetDibPtr(); // Theoretical function to get DIB.
+        //   Debug.Assert( pDib != IntPtr.Zero );
+        //   System.Drawing.Bitmap bmp = BitmapFromDIB( pDib );
+        //   bmp.Save( "mybmp.bmp" );
+        // http://snipplr.com/view/36593.44712/
         public static Bitmap BitmapFromDIB(IntPtr pDIB, IntPtr pPix)
         {
             //because it's static and not public we must to reflect him

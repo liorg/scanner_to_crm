@@ -264,10 +264,6 @@ namespace testdotnettwain
         {
             LogText("Start Scanning...");
             progressBar1.Value = 0;
-            //excute the backgroundWorker  and putting argument 
-        //   backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
-            backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20130509050340957.new.tiff");
-            return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();

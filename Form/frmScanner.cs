@@ -23,8 +23,7 @@ namespace testdotnettwain
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
 
-        IntPtr bmpptr;
-        IntPtr pixptr;
+        
         static string ObjectId = string.Empty;
         static string ObjectType = string.Empty;
         static string ScanSource = string.Empty;
@@ -94,7 +93,7 @@ namespace testdotnettwain
         {
             try
             {
-                string tmpFolder = _configManager.TmpFolder;
+                var tmpFolder = _configManager.TmpFolder;
                 //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication  
                 ArrayList pics = tw.TransferPictures();
                 EndingScan();    tw.CloseSrc();
@@ -102,6 +101,8 @@ namespace testdotnettwain
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
                 BitmapFrame frame;
+                IntPtr bmpptr;
+                IntPtr pixptr;
                 if (!(pics != null && pics.Count != 0))
                 {
                     ShowException("No Has Any pages");
@@ -118,23 +119,19 @@ namespace testdotnettwain
                     //Get Pixel Info by handle
                     pixptr = GdiWin32.GetPixelInfo(bmpptr);
                     Guid clsid;
-                    // get clsId GUIID by extension file (*.tiff)
+                    // get clsId GUID by extension file (*.tiff)
                     GdiWin32.GetCodecClsid(strFileName, out clsid);
                     // create bitmap type
                     Bitmap bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
-                    
+                    // get bitmap frame for insert him TiffBitmapEncoder
                     frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
-                    {
-                        encoder.Frames.Add(frame);
-                    }
+                       encoder.Frames.Add(frame);
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
-
                 }
                 // genrate file name to temp folder 
                 strFileName = GenerateFileTemp(tmpFolder);
-
                 string strNewFileName = strFileName;
                 _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
                 encoder.Save(_output);
