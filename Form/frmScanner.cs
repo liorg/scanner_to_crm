@@ -105,10 +105,9 @@ namespace testdotnettwain
                 string strFileName = "";
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
-                BitmapFrame frame;
+                BitmapFrame frame=null;
                 Bitmap bp = null;
-                IntPtr bmpptr;
-                IntPtr pixptr;
+                IntPtr bmpptr,pixptr;
                 if (!(pics != null && pics.Count != 0))
                 {
                     ShowException("No Has Any pages");
@@ -124,9 +123,6 @@ namespace testdotnettwain
                     bmpptr = Twain.GlobalLock(img);
                     //Get Pixel Info by handle
                     pixptr = GdiWin32.GetPixelInfo(bmpptr);
-                    Guid clsid;
-                    // get clsId GUID by extension file (*.tiff)
-                    GdiWin32.GetCodecClsid(strFileName, out clsid);
                     // create bitmap type
                     bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
 

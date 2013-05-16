@@ -117,5 +117,18 @@ namespace testdotnettwain
             }
             return false;
         }
+        static Guid? tiffClassId = Guid.Empty;
+
+        public static Guid? GetCodecClsidByTiff()
+        {
+            if (tiffClassId==Guid.Empty)
+            {
+                ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+           //  tiffClassId=    codecs.Where(c => c.FilenameExtension == "").FirstOrDefault();
+                tiffClassId = (from c in codecs where c.FormatDescription == "TIFF" select c.Clsid).FirstOrDefault();
+            }
+            return tiffClassId;
+        }
+
     }
 }

@@ -47,12 +47,12 @@ namespace testdotnettwain
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
 
             _configManager = ConfigManager.GetSinglton();
-        
+
         }
 
-       
 
-        
+
+
         /// <summary>
         /// When it's Complete
         /// </summary>
@@ -276,6 +276,7 @@ namespace testdotnettwain
         private void BtnScan_Click(object sender, System.EventArgs e)
         {
             LogText("Start Scanning...");
+
             progressBar1.Value = 0;
             //excute the backgroundWorker  and putting argument 
             //   backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
@@ -285,8 +286,8 @@ namespace testdotnettwain
             //Utils.RestartWIA();
             //LogText("Done Windows Image Acquisition (WIA)");
 
-         //   ShowPrev(@"C:\gili\LIORGLAP20130516121127286.new.tiff");
-         //   return;
+            //   ShowPrev(@"C:\gili\LIORGLAP20130516121127286.new.tiff");
+            //   return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();
@@ -318,18 +319,18 @@ namespace testdotnettwain
             }
             else
             {
-                
+
                 LogText(String.Format("UnSuccessfully end scanning"));
                 if (info == Consts.RestartWIA)
                 {
-                      LogText("the is a error must restart Windows Image Acquisition (WIA) ,and please scan Again" );
-                      if (_configManager.RestartWIAAuto == ConfigManager.TRUE)
-                      {
-                          LogText("Restart Windows Image Acquisition (WIA) ...");
-                          Utils.RestartWIA();
-                          LogText("Done Windows Image Acquisition (WIA)");
+                    LogText("the is a error must restart Windows Image Acquisition (WIA) ,and please scan Again");
+                    if (_configManager.RestartWIAAuto == ConfigManager.TRUE)
+                    {
+                        LogText("Restart Windows Image Acquisition (WIA) ...");
+                        Utils.RestartWIA();
+                        LogText("Done Windows Image Acquisition (WIA)");
 
-                      }
+                    }
                 }
                 else LogText("Error:" + info);
                 OnCloseMissionHandler();
