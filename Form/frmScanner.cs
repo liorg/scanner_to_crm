@@ -175,10 +175,29 @@ namespace testdotnettwain
             CloseResources(disposing);
             base.Dispose(disposing);
         }
-
+        //when we not call to dispose GC  goes her to the finilize,to be ensure that's we realse the tw which is unmanage code
         ~frmScanner()
         {
             Dispose(false);
+        }
+
+       
+        /// <summary>
+        /// Sharing function for Close Resources output filestream and twain global variable
+        /// </summary>
+        /// <param name="disposing">true is manage code</param>
+        public void CloseResources(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_output != null)
+                {
+                    _output.Dispose();
+                }
+            }
+            if (tw != null)
+                tw.Finish();
+
         }
 
         private void ShowException(string message)
@@ -214,23 +233,6 @@ namespace testdotnettwain
             var dtString = DateTime.Now.ToString("yyyyMMddhhmmss");
             return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
         }
-
-        /// <summary>
-        /// Close Resources output filestream and twain global variable
-        /// </summary>
-        /// <param name="disposing">true is manage code</param>
-        public void CloseResources(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_output != null)
-                {
-                    _output.Dispose();
-                }
-            }
-            if (tw != null)
-                tw.Finish();
-
-        }
+    
     }
 }

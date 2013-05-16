@@ -20,21 +20,18 @@ namespace testdotnettwain
         private System.Windows.Forms.TextBox txtHeader;
         private System.Windows.Forms.Label label1;
         private ConfigManager _configManager;
-        private frmScanner _frmmain;
-        private ProgressBar progressBar1;
         private ListBox LogListBox;
         //declare the backgroundWorker
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.Container components = null;
 
-        ~frmStartScan()
-        {
-            Console.Beep();
-        }
+        private ProgressBar progressBar1;
+         
+        private frmScanner _frmmain;
+
         public frmStartScan()
         {
             InitializeComponent();
@@ -50,8 +47,27 @@ namespace testdotnettwain
 
         }
 
+         /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            //Console.Beep();
+            //Console.Beep();
 
-
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                if (_frmmain != null)
+                {
+                    _frmmain.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
         /// <summary>
         /// When it's Complete
@@ -157,10 +173,6 @@ namespace testdotnettwain
 
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
         private void LogText(string text)
         {
 
@@ -173,27 +185,7 @@ namespace testdotnettwain
             LogListBox.Items.Add(text);
             LogListBox.SelectedIndex = LogListBox.Items.Count - 1;
         }
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            //Console.Beep();
-            //Console.Beep();
-
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-                if (_frmmain != null)
-                {
-                    _frmmain.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
+       
 
         #region Windows Form Designer generated code
         /// <summary>
