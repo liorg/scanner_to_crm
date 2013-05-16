@@ -35,7 +35,7 @@ namespace testdotnettwain.Mechanism.Util
                 // ...
             }
         }
-
+        //http://www.csharp-examples.net/restart-windows-service/
         public static void RestartService(string serviceName, int timeoutMilliseconds)
         {
             ServiceController service = new ServiceController(serviceName);

@@ -25,7 +25,7 @@ namespace testdotnettwain
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
 
-        
+
         static string ObjectId = string.Empty;
         static string ObjectType = string.Empty;
         static string ScanSource = string.Empty;
@@ -88,9 +88,9 @@ namespace testdotnettwain
             return true;
         }
 
-       /// <summary>
-        /// Transfer Ready To Scan0
-       /// </summary>
+        /// <summary>
+        /// Transfer Ready To Scan
+        /// </summary>
         private void TransferReady()
         {
             try
@@ -99,15 +99,14 @@ namespace testdotnettwain
                 bool isUnHandleException;
                 //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication  
                 ArrayList pics = tw.TransferPictures(out isUnHandleException);
-                EndingScan();    tw.CloseSrc();
-                if(isUnHandleException)
-                    ShowException(Consts.RestartWIA);
+                EndingScan(); tw.CloseSrc();
+                if (isUnHandleException)   ShowException(Consts.RestartWIA);
 
                 string strFileName = "";
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
                 BitmapFrame frame;
-                Bitmap bp=null;
+                Bitmap bp = null;
                 IntPtr bmpptr;
                 IntPtr pixptr;
                 if (!(pics != null && pics.Count != 0))
@@ -130,18 +129,18 @@ namespace testdotnettwain
                     GdiWin32.GetCodecClsid(strFileName, out clsid);
                     // create bitmap type
                     bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
-                    
+
                     // get bitmap frame for insert him TiffBitmapEncoder
                     frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
-                       encoder.Frames.Add(frame);
+                        encoder.Frames.Add(frame);
                     //decease pointer reference so the gc will see there is no refernce to this obj and realse him from memory
-                   Twain.GlobalUnlock(img);
-                   // Get the last error and display it.
-                   //int error = Marshal.GetLastWin32Error();
+                    Twain.GlobalUnlock(img);
+                    // Get the last error and display it.
+                    //int error = Marshal.GetLastWin32Error();
 
-                   GC.Collect();
-                   GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
                 // genrate file name to temp folder 
                 strFileName = GenerateFileTemp(tmpFolder);
@@ -149,10 +148,8 @@ namespace testdotnettwain
                 _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
                 encoder.Save(_output);
                 //dispose mamange component
-                if (bp != null)
-                    bp.Dispose();
-                
-               //collect all!!!
+                if (bp != null) bp.Dispose();
+                //collect all!!!
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 if (Finish != null)
@@ -163,7 +160,7 @@ namespace testdotnettwain
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Error : \r\n\r\n" + ex.Message.ToString() + "\r\n\r\n" + ex.StackTrace, "Guardian information system");
+                ShowException("Error : \r\n\r\n" + ex.Message.ToString() + "\r\n\r\n" + ex.StackTrace);
             }
         }
 
@@ -194,7 +191,7 @@ namespace testdotnettwain
             {
                 MessageBox.Show(null, message, _configManager.ErrorMessgageHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-           
+
             if (Finish != null)
             {
                 Finish(this, message, false, 0);
@@ -218,10 +215,10 @@ namespace testdotnettwain
 
         private string GenerateFileTemp(string tmpFolder)
         {
-             var dtString= DateTime.Now.ToString("yyyyMMddhhmmss");
-             return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
+            var dtString = DateTime.Now.ToString("yyyyMMddhhmmss");
+            return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
         }
-    
+
         /// <summary>
         /// Close Resources output filestream and twain global variable
         /// </summary>
