@@ -119,8 +119,9 @@ namespace TwainLib
         }
 
 
-        public ArrayList TransferPictures()
+        public ArrayList TransferPictures(out bool isUnHandleException)
         {
+            isUnHandleException = false;
             ArrayList pics = new ArrayList();
             if (srcds.Id == IntPtr.Zero)
                 return pics;
@@ -147,6 +148,8 @@ namespace TwainLib
                 {
                     TwStatus dsmstat = new TwStatus();
                     rc = DSstatus(appid, srcds, TwDG.Control, TwDAT.Status, TwMSG.Get, dsmstat);
+                    if (rc == TwRC.Success && dsmstat.ConditionCode == (short)TwCC.Bummer)
+                        isUnHandleException = true;
                     CloseSrc();
                     return pics;
                 }

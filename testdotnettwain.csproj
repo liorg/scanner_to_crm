@@ -93,6 +93,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Services">
       <Name>System.Web.Services</Name>
     </Reference>
@@ -123,6 +124,7 @@
     <Compile Include="Mechanism\DataModel\SendObjDetail.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
     <Compile Include="Mechanism\UI\StreamWithProgress.cs" />
+    <Compile Include="Mechanism\Util\Utils.cs" />
     <Compile Include="old\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

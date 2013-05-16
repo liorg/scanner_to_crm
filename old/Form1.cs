@@ -125,7 +125,8 @@ namespace testdotnettwain
 					try
 					{
 						string TmpFolder=@System.Configuration.ConfigurationSettings.AppSettings["tmpFolder"];
-						ArrayList pics=tw.TransferPictures();
+                        bool b;
+						ArrayList pics=tw.TransferPictures(out b);
 						EndingScan();
 						tw.CloseSrc();
 						string strFileName;

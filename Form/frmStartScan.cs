@@ -7,6 +7,7 @@ using testdotnettwain.Mechanism;
 using testdotnettwain.UploadLargeImages;
 using System.IO;
 using testdotnettwain.Mechanism.DataModel;
+using testdotnettwain.Mechanism.Util;
 
 namespace testdotnettwain
 {
@@ -279,7 +280,13 @@ namespace testdotnettwain
             //excute the backgroundWorker  and putting argument 
             //   backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
             // backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20130509050340957.new.tiff");
-            // return;
+
+            //LogText("Restart Windows Image Acquisition (WIA) ...");
+            //Utils.RestartWIA();
+            //LogText("Done Windows Image Acquisition (WIA)");
+
+         //   ShowPrev(@"C:\gili\LIORGLAP20130516121127286.new.tiff");
+         //   return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();
@@ -297,10 +304,7 @@ namespace testdotnettwain
                 frmmain.CloseResources(true);
                 if (_configManager.ShowPreview == ConfigManager.TRUE)
                 {
-                    using (var pages = new frmPages(info, LogText))
-                    {
-                        pages.ShowDialog();
-                    }
+                    ShowPrev(info);
                     OnFileTempHandler(info);
                     OnCloseMissionHandler();
                 }
@@ -313,10 +317,28 @@ namespace testdotnettwain
             else
             {
                 LogText(String.Format("UnSuccessfully end scanning"));
-                LogText("Error:" + info);
+                if (info == Consts.RestartWIA)
+                {
+                      LogText("the is a error must restart Windows Image Acquisition (WIA) ,and please scan Again" );
+                      if (_configManager.RestartWIAAuto == ConfigManager.TRUE)
+                      {
+                          LogText("Restart Windows Image Acquisition (WIA) ...");
+                          Utils.RestartWIA();
+                          LogText("Done Windows Image Acquisition (WIA)");
+
+                      }
+                }
+                else LogText("Error:" + info);
                 OnCloseMissionHandler();
             }
 
+        }
+        void ShowPrev(string path)
+        {
+            using (var pages = new frmPages(path, LogText))
+            {
+                pages.ShowDialog();
+            }
         }
 
         void OnCloseMissionHandler()

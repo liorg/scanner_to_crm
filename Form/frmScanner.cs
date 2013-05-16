@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using testdotnettwain.Mechanism;
 using testdotnettwain.Mechanism.GDI;
+using testdotnettwain.Mechanism.Util;
 using TwainLib;
 
 namespace testdotnettwain
@@ -95,9 +96,13 @@ namespace testdotnettwain
             try
             {
                 var tmpFolder = _configManager.TmpFolder;
+                bool isUnHandleException;
                 //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication  
-                ArrayList pics = tw.TransferPictures();
+                ArrayList pics = tw.TransferPictures(out isUnHandleException);
                 EndingScan();    tw.CloseSrc();
+                if(isUnHandleException)
+                    ShowException(Consts.RestartWIA);
+
                 string strFileName = "";
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
@@ -131,7 +136,7 @@ namespace testdotnettwain
                     if (frame != null)
                        encoder.Frames.Add(frame);
                     //decease pointer reference so the gc will see there is no refernce to this obj and realse him from memory
-                   bool unlock= Twain.GlobalUnlock(img);
+                   Twain.GlobalUnlock(img);
                    // Get the last error and display it.
                    //int error = Marshal.GetLastWin32Error();
 
@@ -185,7 +190,11 @@ namespace testdotnettwain
 
         private void ShowException(string message)
         {
-            MessageBox.Show(null, message, System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (message != Consts.RestartWIA)
+            {
+                MessageBox.Show(null, message, _configManager.ErrorMessgageHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
             if (Finish != null)
             {
                 Finish(this, message, false, 0);

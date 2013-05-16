@@ -58,8 +58,22 @@ namespace testdotnettwain.Mechanism
                 return @System.Configuration.ConfigurationSettings.AppSettings["DeleteFileAfterUploading"];
             }
         }
-        
-        
 
+        public string ErrorMessgageHeader
+        {
+            get
+            {
+                return @System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"];
+            }
+        }
+        public string RestartWIAAuto
+        {
+            get
+            {
+                return @System.Configuration.ConfigurationSettings.AppSettings["RestartWIAAuto"];
+            }
+        }
+         
+        
     }
 }
