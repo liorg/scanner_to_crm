@@ -296,12 +296,14 @@ namespace testdotnettwain
 
         private void FrmmainFinish(frmScanner frmmain, string info, bool isSuccess, int picsCount)
         {
-
+            if (frmmain != null)
+            {
+                frmmain.CloseResources(true);
+            }
             if (isSuccess)
             {
                 Cursor = Cursors.WaitCursor;
                 LogText(String.Format("Successfully end scanning {0}", picsCount));
-                frmmain.CloseResources(true);
                 if (_configManager.ShowPreview == ConfigManager.TRUE)
                 {
                     ShowPrev(info);
@@ -316,6 +318,7 @@ namespace testdotnettwain
             }
             else
             {
+                
                 LogText(String.Format("UnSuccessfully end scanning"));
                 if (info == Consts.RestartWIA)
                 {
