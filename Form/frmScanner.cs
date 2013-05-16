@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -101,6 +102,7 @@ namespace testdotnettwain
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
                 BitmapFrame frame;
+                Bitmap bp=null;
                 IntPtr bmpptr;
                 IntPtr pixptr;
                 if (!(pics != null && pics.Count != 0))
@@ -114,27 +116,38 @@ namespace testdotnettwain
                 for (int i = 0; i < pics.Count; i++)
                 {
                     IntPtr img = (IntPtr)pics[i];
-                    //Locks a global memory object and returns a pointer to the first byte of the object's memory block
-                    bmpptr = GdiWin32.GlobalLock(img);
+                    //Locks a global memory object and returns a pointer to the first byte of the object's memory block 
+                    bmpptr = Twain.GlobalLock(img);
                     //Get Pixel Info by handle
                     pixptr = GdiWin32.GetPixelInfo(bmpptr);
                     Guid clsid;
                     // get clsId GUID by extension file (*.tiff)
                     GdiWin32.GetCodecClsid(strFileName, out clsid);
                     // create bitmap type
-                    Bitmap bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
+                    bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
+                    
                     // get bitmap frame for insert him TiffBitmapEncoder
                     frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
                        encoder.Frames.Add(frame);
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    //decease pointer reference so the gc will see there is no refernce to this obj and realse him from memory
+                   bool unlock= Twain.GlobalUnlock(img);
+                   // Get the last error and display it.
+                   //int error = Marshal.GetLastWin32Error();
+
+                   GC.Collect();
+                   GC.WaitForPendingFinalizers();
                 }
                 // genrate file name to temp folder 
                 strFileName = GenerateFileTemp(tmpFolder);
                 string strNewFileName = strFileName;
                 _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
                 encoder.Save(_output);
+                //dispose mamange component
+                if (bp != null)
+                    bp.Dispose();
+                
+               //collect all!!!
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 if (Finish != null)

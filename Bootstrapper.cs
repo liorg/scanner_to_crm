@@ -36,7 +36,7 @@ namespace testdotnettwain
                 Process[] localByName = Process.GetProcessesByName(name);
                 if (localByName.Length > 1) Environment.Exit(0);
               //  Application.Run(new Form2());
-
+          
                 Application.Run(new frmStartScan());
 
 
@@ -53,6 +53,7 @@ namespace testdotnettwain
 
         }
 
+      
         static private void ShowException(string message)
         {
             MessageBox.Show(null, message, System.Configuration.ConfigurationSettings.AppSettings["ErrorMessgageHeader"], MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -33,11 +33,6 @@ namespace testdotnettwain
             int width, int height, int xsrc, int ysrc, int start, int lines,
             IntPtr bitsptr, IntPtr bmiptr, int color);
 
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        internal static extern IntPtr GlobalLock(IntPtr handle);
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        internal static extern IntPtr GlobalFree(IntPtr handle);
-
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern void OutputDebugString(string outstr);
         [DllImport("gdiplus.dll", ExactSpelling = true)]

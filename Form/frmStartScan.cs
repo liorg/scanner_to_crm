@@ -30,6 +30,10 @@ namespace testdotnettwain
         /// </summary>
         private System.ComponentModel.Container components = null;
 
+        ~frmStartScan()
+        {
+            Console.Beep();
+        }
         public frmStartScan()
         {
             InitializeComponent();
@@ -40,15 +44,20 @@ namespace testdotnettwain
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
-          
+
             _configManager = ConfigManager.GetSinglton();
+        
         }
+
+       
+
+        
         /// <summary>
         /// When it's Complete
         /// </summary>
         void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-             LogText("Finish!");
+            LogText("Finish!");
             Cursor = Cursors.Default;
             var result = e.Result as FileInfoUpload;
             if (result == null)
@@ -92,7 +101,7 @@ namespace testdotnettwain
             string textFile = e.Argument as string;
             try
             {
-               
+
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
 
@@ -122,13 +131,13 @@ namespace testdotnettwain
                         //client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress,Guid.NewGuid(),"12");
                         client.UploadFile(fileInfo.Name, fileInfo.Length, Guid.NewGuid(), "12", uploadStreamWithProgress);
                         LogText("Done!");
-                        
+
                         // close service client
                         client.Close();
                         // Send Result to Complete Task event hanlder
                         //(backgroundWorker1_RunWorkerCompleted)
                         e.Result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
@@ -137,16 +146,16 @@ namespace testdotnettwain
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
                 // Send Result to Complete Task event hanlder
                 //(backgroundWorker1_RunWorkerCompleted)
-                      
+
                 e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
-             
+
             }
             finally
             {
             }
 
         }
-       
+
 
         /// <summary>
         /// 
@@ -168,6 +177,9 @@ namespace testdotnettwain
         /// </summary>
         protected override void Dispose(bool disposing)
         {
+            //Console.Beep();
+            //Console.Beep();
+
             if (disposing)
             {
                 if (components != null)
@@ -264,6 +276,10 @@ namespace testdotnettwain
         {
             LogText("Start Scanning...");
             progressBar1.Value = 0;
+            //excute the backgroundWorker  and putting argument 
+            //   backgroundWorker1.RunWorkerAsync(@"C:\gili\new.tiff");
+            // backgroundWorker1.RunWorkerAsync(@"C:\gili\LIORGLAP20130509050340957.new.tiff");
+            // return;
             if (_frmmain != null)
                 _frmmain.Dispose();
             _frmmain = new frmScanner();
@@ -273,7 +289,7 @@ namespace testdotnettwain
 
         private void FrmmainFinish(frmScanner frmmain, string info, bool isSuccess, int picsCount)
         {
-           
+
             if (isSuccess)
             {
                 Cursor = Cursors.WaitCursor;
@@ -292,7 +308,7 @@ namespace testdotnettwain
                 {
                     backgroundWorker1.RunWorkerAsync(info);
                 }
-               
+
             }
             else
             {
@@ -320,6 +336,8 @@ namespace testdotnettwain
             }
         }
 
-        
+
+
+
     }
 }
