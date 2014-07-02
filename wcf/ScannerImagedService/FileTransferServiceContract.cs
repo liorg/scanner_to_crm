@@ -9,7 +9,7 @@ namespace FileService
     public interface IFileTransferService
     {
         [OperationContract]
-        void UploadFile(RemoteFileInfo request);
+        ResponseBase UploadFile(RemoteFileInfo request);
 
        
     }

@@ -14,40 +14,53 @@ namespace FileService
     {
 
 
-        public void UploadFile(RemoteFileInfo request)
+        public ResponseBase UploadFile(RemoteFileInfo request)
         {
-            // report start
-            Console.WriteLine("Start uploading " + request.FileName);
-            Console.WriteLine("Size " + request.Length);
-            var filePathSving = System.Configuration.ConfigurationManager.AppSettings["FilePathSving"];
-            filePathSving += @"\Upload";
-            // create output folder, if does not exist       
-            if (!System.IO.Directory.Exists(filePathSving)) System.IO.Directory.CreateDirectory(filePathSving);
-          
-            // kill target file, if already exists
-            string filePath = System.IO.Path.Combine(filePathSving, request.FileName + "_"+request.ObjType);
-            if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
-
-            int chunkSize = 2048;
-            byte[] buffer = new byte[chunkSize];
-
-            using (System.IO.FileStream writeStream = new System.IO.FileStream(filePath, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
+            ResponseBase res = new ResponseBase();
+            try
             {
-                do
+                // report start
+                Console.WriteLine("Start uploading " + request.FileName);
+                Console.WriteLine("Size " + request.Length);
+                var filePathSving = System.Configuration.ConfigurationManager.AppSettings["FilePathSving"];
+                filePathSving += @"\Upload";
+                // create output folder, if does not exist       
+                if (!System.IO.Directory.Exists(filePathSving)) System.IO.Directory.CreateDirectory(filePathSving);
+
+                // kill target file, if already exists
+                string filePath = System.IO.Path.Combine(filePathSving, request.FileName + "_" + request.ObjType);
+                if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+
+                int chunkSize = 2048;
+                byte[] buffer = new byte[chunkSize];
+
+                using (System.IO.FileStream writeStream = new System.IO.FileStream(filePath, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
                 {
-                    // read bytes from input stream
-                    int bytesRead = request.FileByteStream.Read(buffer, 0, chunkSize);
-                    if (bytesRead == 0) break;
+                    do
+                    {
+                        // read bytes from input stream
+                        int bytesRead = request.FileByteStream.Read(buffer, 0, chunkSize);
+                        if (bytesRead == 0) break;
 
-                    // write bytes to output stream
-                    writeStream.Write(buffer, 0, bytesRead);
-                } while (true);
+                        // write bytes to output stream
+                        writeStream.Write(buffer, 0, bytesRead);
+                    } while (true);
 
-                // report end
-                Console.WriteLine("Done!");
+                    // report end
+                    Console.WriteLine("Done!");
 
-                writeStream.Close();
+                    writeStream.Close();
+                }
             }
+            catch (Exception e)
+            {
+
+                res.IsError = true;
+                res.ErrorDesc = e.ToString();
+            }
+
+            return res;
+            
         }
 
        
