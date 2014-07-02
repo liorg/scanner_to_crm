@@ -106,7 +106,7 @@ namespace TwainLib
 
             TwUserInterface guif = new TwUserInterface();
             // show scanner view 
-            guif.ShowUI = 0;
+            guif.ShowUI = 1;
             guif.ModalUI = 0;
 
             guif.ParentHand = hwnd;

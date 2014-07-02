@@ -39,16 +39,18 @@ namespace testdotnettwain
             {
                 #region mocking
                 //for test
-                // Application.Run(new frmStartScan("111", null));
+                Application.Run(new frmStartScan("111", null));
                 #endregion
 
-                String name = Process.GetCurrentProcess().ProcessName;
-                Process[] localByName = Process.GetProcessesByName(name);
-                NameValueCollection nameValue = null;
-                if (localByName.Length > 1) Environment.Exit(0);
-                nameValue = GetQueryStringParameters();
+                #region prod
+                //String name = Process.GetCurrentProcess().ProcessName;
+                //Process[] localByName = Process.GetProcessesByName(name);
+                //NameValueCollection nameValue = null;
+                //if (localByName.Length > 1) Environment.Exit(0);
+                //nameValue = GetQueryStringParameters();
 
-                Application.Run(new frmStartScan(_version, nameValue));
+                //Application.Run(new frmStartScan(_version, nameValue));
+                #endregion
             }
             catch (Exception ex)
             {
