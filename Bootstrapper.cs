@@ -8,14 +8,14 @@ using System.Windows.Forms;
 namespace testdotnettwain
 {
     class Bootstrapper
-    {
+    {//test
         [STAThread]
         static void Main(string[] args)
         {
             try
             {
                 //if (args.Length<3) 
-                //{
+                //{ 
 
 
                 //    throw (new Exception(System.Configuration.ConfigurationSettings.AppSettings["loadingErrorMessgage"]));
