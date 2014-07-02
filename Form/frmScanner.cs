@@ -33,12 +33,13 @@ namespace testdotnettwain
         private ConfigManager _configManager;
         private Stream _output;
 
-        public frmScanner()
+        public frmScanner(ConfigManager configManager)
         {
-            _configManager = ConfigManager.GetSinglton();
+            _configManager = configManager;// ConfigManager.GetSinglton();
             InitializeComponent();
         }
 
+       
         public void Acquire()
         {
             tw = new Twain();

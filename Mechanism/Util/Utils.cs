@@ -16,13 +16,22 @@ namespace testdotnettwain.Mechanism.Util
 
         public static void RestartWIA()
         {
-            string serviceName="stisvc";
-            ServiceController service = new ServiceController(serviceName);
-            service.Stop();
-            service.WaitForStatus(ServiceControllerStatus.Stopped);
+            try
+            {
+                string serviceName = "stisvc";
+                ServiceController service = new ServiceController(serviceName);
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
 
-            service.Start();
-            service.WaitForStatus(ServiceControllerStatus.Running);
+                service.Start();
+                service.WaitForStatus(ServiceControllerStatus.Running);
+            }
+            catch (Exception e)
+            {
+                
+                //throw;
+            }  
+            
            
         }
 

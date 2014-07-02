@@ -24,7 +24,7 @@
     <WebReference_EnableLegacyEventingModel>true</WebReference_EnableLegacyEventingModel>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>0.0</OldToolsVersion>
@@ -84,9 +84,11 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
@@ -94,12 +96,14 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services">
       <Name>System.Web.Services</Name>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -108,6 +112,12 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Form\FrmConfigDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FrmConfigDetails.Designer.cs">
+      <DependentUpon>FrmConfigDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\frmPages.cs">
       <SubType>Form</SubType>
@@ -173,13 +183,16 @@
     <Content Include="App.ico" />
     <Content Include="HTML\UpgradeLog.htm" />
     <Content Include="HTML\UpgradeLog.XML" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.disco" />
     <None Include="Service References\UploadLargeImages\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\UploadLargeImages\configuration.svcinfo" />
     <None Include="Service References\UploadLargeImages\configuration91.svcinfo" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.disco" />
+    <EmbeddedResource Include="Form\FrmConfigDetails.resx">
+      <DependentUpon>FrmConfigDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\frmPages.resx">
       <DependentUpon>frmPages.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -199,14 +212,14 @@
     <None Include="app.config" />
     <None Include="Docs\SCANERaDDoN.docx" />
     <None Include="Docs\twain 2.2 spec.pdf" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.wsdl" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.wsdl" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService2.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService32.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />

@@ -18,14 +18,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:2013/ServiceFileTransferService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:3434/ServiceFileTransferService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ServiceFileTransferService.wsdl" MetadataType="Wsdl" ID="a52050c1-92d6-4b08-8124-27caa4c3dcff" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?wsdl" />
-    <MetadataFile FileName="ServiceFileTransferService.xsd" MetadataType="Schema" ID="9873d617-3479-4860-9911-18fe2c35845a" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd2" />
-    <MetadataFile FileName="ServiceFileTransferService1.xsd" MetadataType="Schema" ID="9976f94b-fd06-4ec2-8ddb-c71257dbe45f" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd0" />
-    <MetadataFile FileName="ServiceFileTransferService.disco" MetadataType="Disco" ID="03475437-c65e-45cd-bdee-20cfaeeaafed" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?disco" />
-    <MetadataFile FileName="ServiceFileTransferService2.xsd" MetadataType="Schema" ID="3d7e23d2-20da-40d1-80f4-aed485acb982" SourceId="1" SourceUrl="http://localhost:2013/ServiceFileTransferService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ServiceFileTransferService1.disco" MetadataType="Disco" ID="0203cd1a-65b5-43e3-a8c8-97313427494b" SourceId="1" SourceUrl="http://lap-gs-48.jer.ad.malam.com:3434/ServiceFileTransferService.svc?disco" />
+    <MetadataFile FileName="ServiceFileTransferService1.wsdl" MetadataType="Wsdl" ID="729c8b83-e277-4e46-b93e-27d3de0ff33a" SourceId="1" SourceUrl="http://lap-gs-48.jer.ad.malam.com:3434/ServiceFileTransferService.svc?wsdl" />
+    <MetadataFile FileName="ServiceFileTransferService3.xsd" MetadataType="Schema" ID="afaaf2f6-f1d8-4ced-888c-bd6c7f3dc6f6" SourceId="1" SourceUrl="http://lap-gs-48.jer.ad.malam.com:3434/ServiceFileTransferService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ServiceFileTransferService31.xsd" MetadataType="Schema" ID="a895b1b5-eafb-4051-b9c1-70a9171a302c" SourceId="1" SourceUrl="http://lap-gs-48.jer.ad.malam.com:3434/ServiceFileTransferService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ServiceFileTransferService32.xsd" MetadataType="Schema" ID="b25aa13b-290f-4e79-b00b-5faa83e9768a" SourceId="1" SourceUrl="http://lap-gs-48.jer.ad.malam.com:3434/ServiceFileTransferService.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
