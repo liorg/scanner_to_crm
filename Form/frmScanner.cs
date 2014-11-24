@@ -85,6 +85,11 @@ namespace testdotnettwain
                         TransferReady();
                         break;
                     }
+                case TwainCommand.Null:
+                    {
+                        ShowException("App is closed");
+                        break;
+                    }
             }
             return true;
         }
