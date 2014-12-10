@@ -15,9 +15,6 @@ namespace TwainLib
         DeviceEvent = 4
     }
 
-
-
-
     public class Twain
     {
         private const short CountryUSA = 1;
@@ -51,9 +48,6 @@ namespace TwainLib
             Marshal.FreeHGlobal(evtmsg.EventPtr);
         }
 
-
-
-
         public void Init(IntPtr hwndp)
         {
             Finish();
@@ -67,6 +61,7 @@ namespace TwainLib
                     rc = DSMparent(appid, IntPtr.Zero, TwDG.Control, TwDAT.Parent, TwMSG.CloseDSM, ref hwndp);
             }
         }
+        bool _isSelected = false;
 
         public void Select()
         {
@@ -78,9 +73,9 @@ namespace TwainLib
                 if (appid.Id == IntPtr.Zero)
                     return;
             }
+            _isSelected = true;
             rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.UserSelect, srcds);
         }
-
 
         public void Acquire()
         {
@@ -92,6 +87,9 @@ namespace TwainLib
                 if (appid.Id == IntPtr.Zero)
                     return;
             }
+            if(!_isSelected)
+                rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
+            //SelectByName("TW-Brother");
             rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.OpenDS, srcds);
             if (rc != TwRC.Success)
                 return;
@@ -117,7 +115,58 @@ namespace TwainLib
                 return;
             }
         }
+        //https://github.com/caspark/snapsy/blob/master/twain
+        public bool SelectByName(string name)
+        {
+            if (srcds.ProductName == name)
+            {
+                return true;
+            }
+            TwRC rc = TwRC.Success;
+            while (rc == TwRC.Success)
+            {
+                rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetNext, srcds);
+                if (srcds.ProductName == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
+        //http://stackoverflow.com/questions/13357297/is-it-possible-in-twain-to-force-a-scanner-to-set-the-region-to-the-entire-width ????
+        //????
+        //private static TwIdentity GetSource(TwIdentity appid, string name)
+        //{
+        //    var device = new TwIdentity { Id = IntPtr.Zero };
+          
+        //    var rc = DSMentry(appid,  IntPtr.Zero,  TwDG.Control, TwDAT.Identity,  TwMSG.GetFirst,    device);
+            
+        //    if (rc != TwRC.EndOfList &&
+        //        device.ProductName.Equals(name,   StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return device;
+        //    }
+
+        //    while (rc != TwRC.EndOfList)
+        //    {
+        //        device = new TwIdentity { Id = IntPtr.Zero };
+        //        rc = DSMentry(appid,
+        //                                    IntPtr.Zero,
+        //                                     TwDG.Control, TwDAT.Identity,
+        //                                    TwMSG.GetNext,
+        //                                    device);
+
+        //        if (rc != TwRC.EndOfList &&
+        //           device.ProductName.Equals(name,
+        //                                  StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return device;
+        //        }
+        //    }
+
+        //    throw new InvalidOperationException("Could not find device");
+        //}
 
         public ArrayList TransferPictures(out bool isUnHandleException)
         {
@@ -274,7 +323,10 @@ namespace TwainLib
 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSpxfer([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwPendingXfers pxfr);
-
+        //http://stackoverflow.com/questions/13357297/is-it-possible-in-twain-to-force-a-scanner-to-set-the-region-to-the-entire-width
+       
+        //[DllImport("twain_32.dll", EntryPoint = "#1")]
+        //internal static extern TwRC DSMentry([In, Out] TwIdentity origin, IntPtr zeroptr, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwIdentity idds);
 
         [DllImport("kernel32.dll", ExactSpelling = true)]
         internal static extern IntPtr GlobalAlloc(int flags, int size);
