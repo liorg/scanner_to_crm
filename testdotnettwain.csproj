@@ -192,6 +192,7 @@
     <Content Include="App.ico" />
     <Content Include="HTML\UpgradeLog.htm" />
     <Content Include="HTML\UpgradeLog.XML" />
+    <None Include="Docs\TWAIN-2.3-Spec.pdf" />
     <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.disco" />
     <None Include="Service References\UploadLargeImages\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
