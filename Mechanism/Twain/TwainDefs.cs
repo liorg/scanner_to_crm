@@ -27,7 +27,7 @@ internal enum TwDAT : short
 	Event			= 0x0002,
 	Identity		= 0x0003,
 	Parent			= 0x0004,
-	PendingXfers	= 0x0005,
+	PendingXfers	= 0x0005, 
 	SetupMemXfer	= 0x0006,
 	SetupFileXfer	= 0x0007,
 	Status			= 0x0008,
