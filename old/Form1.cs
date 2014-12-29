@@ -83,10 +83,12 @@ namespace testdotnettwain
 			this.txtHeader=txtHeader;
 			this.txtNote=txtNote;
 		}
-
+        void Log(string s)
+        {
+        }
 		public void Acquire()
 		{
-			tw = new Twain();
+            tw = new Twain(Log);
 			tw.Init( this.Handle );
 			//tw.Select();
 			this.Enabled=false;

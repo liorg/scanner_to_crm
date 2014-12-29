@@ -4,19 +4,17 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using testdotnettwain.Mechanism;
-
+ 
 using System.IO;
 using testdotnettwain.Mechanism.DataModel;
 using testdotnettwain.Mechanism.Util;
-
 using System.Security.Principal;
-
+using ScannerToCrm;
 using System.ServiceModel;
 using System.Collections.Specialized;
 using System.Net;
-using ScannerToCrm;
 using testdotnettwain.UploadLargeImages;
-
+ 
 namespace testdotnettwain
 {
     /// <summary>
@@ -33,12 +31,12 @@ namespace testdotnettwain
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.Container components = null;
-
+ 
         private ProgressBar progressBar1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1;
-
+ 
         private frmScanner _frmmain;
         private ToolStripMenuItem restartWIAToolStripMenuItem;
         private ToolStripMenuItem configurationToolStripMenuItem;
@@ -48,25 +46,37 @@ namespace testdotnettwain
         FrmConfigDetails _fconfig;
         Guid _objectId = Guid.Empty;
         //for test
-
-
-        public frmStartScan(string version, NameValueCollection nameValue)
+ 
+        public frmStartScan()
         {
-            _version = version;
-
             _configManager = ConfigManager.GetSinglton();
-
+            _configManager.ShowPreview = "1";
             InitializeComponent();
             //init the backgroundWorker
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            //set this property for Progressing Monitor 
+            //set this property for Progressing Monitor
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.DoWork += backgroundWorker1_DoWork;
+            backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
+            backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
+        }
+        public frmStartScan(string version, NameValueCollection nameValue)
+        {
+            _version = version;
+ 
+            _configManager = ConfigManager.GetSinglton();
+ 
+            InitializeComponent();
+            //init the backgroundWorker
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            //set this property for Progressing Monitor
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             if (nameValue != null)
             {
-
+ 
                 var objectid = nameValue.Get(ConfigManager.ObjectIdKey);
                 if (!String.IsNullOrEmpty(objectid))
                 {
@@ -75,7 +85,7 @@ namespace testdotnettwain
                 }
                 else
                     LogText("no Geting any Doc crm Id");
-
+ 
                 var urlUploader = nameValue.Get(ConfigManager.UrlUploaderKey);
                 if (!String.IsNullOrEmpty(urlUploader))
                 {
@@ -84,30 +94,30 @@ namespace testdotnettwain
                     _configManager.UrlUploader = urlUploader;
                     // MessageBox.Show(_configManager.UrlUploader);
                 }
-
+ 
                 var showScanners = nameValue.Get(ConfigManager.ShowScannersKey);
                 if (!String.IsNullOrEmpty(showScanners))
                     _configManager.ShowScanners = showScanners;
-
+ 
                 var showPreview = nameValue.Get(ConfigManager.ShowPreviewKey);
                 if (!String.IsNullOrEmpty(showPreview))
                     _configManager.ShowPreview = showPreview;
-
+ 
                 var closeScannerAuto = nameValue.Get(ConfigManager.CloseScannerAutoKey);
                 if (!String.IsNullOrEmpty(closeScannerAuto))
                     _configManager.CloseScannerAuto = closeScannerAuto;
-
+ 
                 var tmpFolder = nameValue.Get(ConfigManager.TmpFolderKey);
                 if (!String.IsNullOrEmpty(tmpFolder))
                     _configManager.TmpFolder = tmpFolder;
-
+ 
                 var deleteFileAfterUploading = nameValue.Get(ConfigManager.DeleteFileAfterUploadingKey);
                 if (!String.IsNullOrEmpty(deleteFileAfterUploading))
                     _configManager.DeleteFileAfterUploading = deleteFileAfterUploading;
             }
             _fconfig = new FrmConfigDetails(_configManager);
         }
-
+ 
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -115,7 +125,7 @@ namespace testdotnettwain
         {
             //Console.Beep();
             //Console.Beep();
-
+ 
             if (disposing)
             {
                 if (components != null)
@@ -129,7 +139,7 @@ namespace testdotnettwain
             }
             base.Dispose(disposing);
         }
-
+ 
         /// <summary>
         /// When it's Complete
         /// </summary>
@@ -172,7 +182,7 @@ namespace testdotnettwain
             progressBar1.Value = e.ProgressPercentage;
         }
         /// <summary>
-        /// Do Work on Asynchronous mode 
+        /// Do Work on Asynchronous mode
         /// </summary>
         void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -181,11 +191,11 @@ namespace testdotnettwain
             {
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
-
+ 
                 // show start message
                 LogText("Starting uploading " + fileInfo.Name);
                 LogText("Size : " + fileInfo.Length);
-
+ 
                 // open input stream
                 using (var stream = new System.IO.FileStream(textFile, FileMode.Open, FileAccess.Read))
                 {
@@ -199,20 +209,20 @@ namespace testdotnettwain
                         client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
                         client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
                         client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
-
+ 
                         if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
                             LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
                         else
                             LogText("Upload To Server :UNKNWON");
-
+ 
                         var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
-
+ 
                         if (res == true)
                         {
                             LogText(errDesc);
                         }
                         LogText("Done!");
-
+ 
                         // close service client
                         client.Close();
                         // Send Result to Complete Task event hanlder
@@ -227,27 +237,27 @@ namespace testdotnettwain
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
                 // Send Result to Complete Task event hanlder
                 //(backgroundWorker1_RunWorkerCompleted)
-
+ 
                 e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
-
+ 
             }
-
-
+ 
+ 
         }
-
+ 
         private void LogText(string text)
         {
             if (LogListBox.InvokeRequired)
             {
-                // Occur only when in async mode 
+                // Occur only when in async mode
                 LogListBox.Invoke(new Action<string>(LogText), text);
                 return;
             }
             LogListBox.Items.Add(text);
             LogListBox.SelectedIndex = LogListBox.Items.Count - 1;
         }
-
-
+ 
+ 
         #region Windows Form Designer generated code
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -261,15 +271,15 @@ namespace testdotnettwain
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.restartWIAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.restartWIAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // BtnScan
-            // 
+            //
             this.BtnScan.BackColor = System.Drawing.Color.Bisque;
             this.BtnScan.Location = new System.Drawing.Point(8, 66);
             this.BtnScan.Name = "BtnScan";
@@ -278,16 +288,16 @@ namespace testdotnettwain
             this.BtnScan.Text = "סרוק";
             this.BtnScan.UseVisualStyleBackColor = false;
             this.BtnScan.Click += new System.EventHandler(this.BtnScan_Click);
-            // 
+            //
             // progressBar1
-            // 
+            //
             this.progressBar1.Location = new System.Drawing.Point(8, 37);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(408, 23);
             this.progressBar1.TabIndex = 11;
-            // 
+            //
             // LogListBox
-            // 
+            //
             this.LogListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -297,9 +307,9 @@ namespace testdotnettwain
             this.LogListBox.Name = "LogListBox";
             this.LogListBox.Size = new System.Drawing.Size(408, 60);
             this.LogListBox.TabIndex = 12;
-            // 
+            //
             // menuStrip1
-            // 
+            //
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -307,9 +317,9 @@ namespace testdotnettwain
             this.menuStrip1.Size = new System.Drawing.Size(429, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
-            // 
+            //
             // helpToolStripMenuItem
-            // 
+            //
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripSeparator1,
@@ -319,40 +329,40 @@ namespace testdotnettwain
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
-            // 
+            //
             // toolStripMenuItem1
-            // 
+            //
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem1.Text = "About";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.About_Click);
-            // 
+            //
+            // toolStripSeparator1
+            //
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
+            //
             // restartWIAToolStripMenuItem
-            // 
+            //
             this.restartWIAToolStripMenuItem.Name = "restartWIAToolStripMenuItem";
-            this.restartWIAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.restartWIAToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.restartWIAToolStripMenuItem.Text = "Restart WIA";
             this.restartWIAToolStripMenuItem.Click += new System.EventHandler(this.RestartWia_Click);
-            // 
+            //
+            // toolStripSeparator2
+            //
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(145, 6);
+            //
             // configurationToolStripMenuItem
-            // 
+            //
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.configurationToolStripMenuItem.Text = "Configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.Configuration_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
-            // 
+            //
             // frmStartScan
-            // 
+            //
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(429, 167);
             this.Controls.Add(this.LogListBox);
@@ -362,43 +372,49 @@ namespace testdotnettwain
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmStartScan";
             this.Text = "Guardian Scanner ver 3.0";
+            this.Load += new System.EventHandler(this.frmStartScan_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
+ 
         }
         #endregion
-
-
+ 
+ 
         private void BtnScan_Click(object sender, System.EventArgs e)
         {
+            StartScan();
+        }
+        void StartScan(){
             LogText("Start Scanning...");
-
+ 
             progressBar1.Value = 0;
-            //excute the backgroundWorker  and putting argument 
-
+            //excute the backgroundWorker  and putting argument
+ 
             #region mocking
             //var scanfile = _configManager.TmpFolder + "\\1.tiff";
             //MessageBox.Show("<<mocking scan file>>" + scanfile);
             //  backgroundWorker1.RunWorkerAsync(scanfile);
             //Sync(scanfile);
-           // return;
-
+            // return;
+ 
             #endregion
-
+ 
             if (_frmmain != null)
                 _frmmain.Dispose();
-            _frmmain = new frmScanner(_configManager);
+            _frmmain = new frmScanner(_configManager,LogText);
             _frmmain.Finish += FrmmainFinish;
             _frmmain.Acquire();
+ 
         }
-
+ 
+ 
         private void FrmmainFinish(frmScanner frmmain, string info, bool isSuccess, int picsCount)
         {
             if (frmmain != null)
                 frmmain.CloseResources(true);
-
+ 
             if (isSuccess)
             {
                 Cursor = Cursors.WaitCursor;
@@ -414,7 +430,7 @@ namespace testdotnettwain
             }
             else
             {
-
+ 
                 LogText(String.Format("UnSuccessfully end scanning"));
                 if (info == Consts.RestartWIA)
                 {
@@ -424,15 +440,16 @@ namespace testdotnettwain
                         LogText("Restart Windows Image Acquisition (WIA) ...");
                         Utils.RestartWIA();
                         LogText("Done Windows Image Acquisition (WIA)");
-
+ 
                     }
                 }
                 else
                     LogText("Error:" + info);
                 OnCloseMissionHandler();
             }
-
+ 
         }
+     
         void ShowPrev(string path)
         {
             using (var pages = new frmPages(path,_objectId, _configManager, LogText))
@@ -440,7 +457,7 @@ namespace testdotnettwain
                 pages.ShowDialog();
             }
         }
-
+ 
         void OnCloseMissionHandler()
         {
             if (_configManager.CloseScannerAuto == ConfigManager.TRUE)
@@ -449,7 +466,7 @@ namespace testdotnettwain
                 Application.Exit();
             }
         }
-
+ 
         void OnFileTempHandler(string path)
         {
             if (_configManager.DeleteFileAfterUploading == ConfigManager.TRUE)
@@ -457,25 +474,24 @@ namespace testdotnettwain
                 File.Delete(path);
             }
         }
-
+ 
         private void About_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Version Publisher:" + _version + "  All right resrved Guardian system LTD 2014");
         }
-
+ 
         private void RestartWia_Click(object sender, EventArgs e)
         {
             LogText("Restart Windows Image Acquisition (WIA) ...");
             Utils.RestartWIA();
             LogText("Done Windows Image Acquisition (WIA)");
         }
-
+ 
         private void Configuration_Click(object sender, EventArgs e)
         {
             _fconfig.ShowDialog();
         }
-
-
+ 
         void Sync(string textFile)
         {
             // string textFile = e.Argument as string;
@@ -483,11 +499,11 @@ namespace testdotnettwain
             {
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
-
+ 
                 // show start message
                 LogText("Starting uploading " + fileInfo.Name);
                 LogText("Size : " + fileInfo.Length);
-
+ 
                 // open input stream
                 using (var stream = new System.IO.FileStream(textFile, FileMode.Open, FileAccess.Read))
                 {
@@ -501,36 +517,34 @@ namespace testdotnettwain
                         client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
                         //client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Delegation;
                         //client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
-
-
+ 
+ 
                       client.ClientCredentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
                         //client.ClientCredentials.Windows.ClientCredential=new NetworkCredential("mevaker\\hdmalam", "HDC@ll100");
                       //client.ClientCredentials.Windows.AllowNtlm = false;
-
+ 
                         //client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Identification;
                       client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
-                       
-                        
-                        
+                      
                         // client.ClientCredentials.Windows.AllowNtlm = true;
                         if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
                             LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
                         else
                             LogText("Upload To Server :UNKNWON");
-
+ 
                         var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
-
+ 
                         if (res == true)
                         {
                             LogText(errDesc);
                         }
                         LogText("Done!");
-
+ 
                         // close service client
                         client.Close();
                         // Send Result to Complete Task event hanlder
                         //(backgroundWorker1_RunWorkerCompleted)
-
+ 
                     }
                 }
             }
@@ -540,10 +554,16 @@ namespace testdotnettwain
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
                 // Send Result to Complete Task event hanlder
                 //(backgroundWorker1_RunWorkerCompleted)
-
-
+ 
+ 
             }
         }
+ 
+        private void frmStartScan_Load(object sender, EventArgs e)
+        {
+            //wj_class1 computer
+            StartScan();
+        }
     }
-
+ 
 }

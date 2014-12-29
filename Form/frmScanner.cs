@@ -16,7 +16,7 @@ using testdotnettwain.Mechanism;
 using testdotnettwain.Mechanism.GDI;
 using testdotnettwain.Mechanism.Util;
 using TwainLib;
-
+ 
 namespace testdotnettwain
 {
     public partial class frmScanner : Form, IMessageFilter
@@ -24,76 +24,94 @@ namespace testdotnettwain
         public event Action<frmScanner, string, bool, int> Finish;
         private Twain tw;
         Rectangle bmprect = new Rectangle(0, 0, 0, 0);
-
-
+ 
+ 
         static string ObjectId = string.Empty;
         static string ObjectType = string.Empty;
         static string ScanSource = string.Empty;
         static string ObjectInfo = string.Empty;
         private ConfigManager _configManager;
         private Stream _output;
-
-        public frmScanner(ConfigManager configManager)
+        Action<string> _log;
+        public frmScanner(ConfigManager configManager,Action<string> log)
         {
+            _log = log;
             _configManager = configManager;// ConfigManager.GetSinglton();
             InitializeComponent();
         }
-
-       
+ 
+        public void Log(string s)
+        {
+            _log(s);
+        }
         public void Acquire()
         {
-            tw = new Twain();
+            tw = new Twain(_log);
             tw.Init(this.Handle);
             if (_configManager.ShowScanners == ConfigManager.TRUE)
             {
+               // Log("Acquire _configManager.ShowScanners == ConfigManager.TRUE");
                 tw.Select();
             }
-
+ 
             this.Enabled = false;
-
+ 
             Application.AddMessageFilter(this);
-
+ 
             tw.Acquire();
         }
-
+ 
         bool IMessageFilter.PreFilterMessage(ref Message m)
         {
+            Log("PreFilterMessage begin");
+           
             TwainCommand cmd = tw.PassMessage(ref m);
             if (cmd == TwainCommand.Not)
+            {
+                //Log("PreFilterMessage cmd == TwainCommand.Not");
                 return false;
+            }
             switch (cmd)
             {
                 case TwainCommand.CloseRequest:
                     {
+                        //Log("PreFilterMessage CloseRequest");
                         EndingScan();
                         tw.CloseSrc();
                         break;
                     }
                 case TwainCommand.CloseOk:
                     {
+                       // Log("PreFilterMessage CloseOk");
                         EndingScan();
                         tw.CloseSrc();
                         break;
                     }
                 case TwainCommand.DeviceEvent:
                     {
+                       // Log("PreFilterMessage DeviceEvent");
                         break;
                     }
-
+ 
                 case TwainCommand.TransferReady:
                     {
+                      //  Log("PreFilterMessage TransferReady");
                         TransferReady();
                         break;
                     }
                 case TwainCommand.Null:
                     {
-                        ShowException("App is closed");
+                      //  Log("PreFilterMessage TwainCommand.Null");
+                        EndingScan();
+                        tw.CloseSrc();
+                        ShowException("TwainCommand.Null is null !!!!");
                         break;
                     }
             }
+            Log("PreFilterMessage end");
             return true;
         }
-
+ 
         /// <summary>
         /// Transfer Ready To Scan
         /// </summary>
@@ -101,16 +119,20 @@ namespace testdotnettwain
         {
             try
             {
+                Log(" Begin TransferReady");
                 var tmpFolder = _configManager.TmpFolder;
                 bool isUnHandleException;
-                //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication  
+                //tranfer each image that's scann0ed and insert him to array,also dialogbox for a progress bar Indication 
                 ArrayList pics = tw.TransferPictures(out isUnHandleException);
-                EndingScan(); tw.CloseSrc();
-                if (isUnHandleException)   ShowException(Consts.RestartWIA);
-
+                EndingScan();
+                tw.CloseSrc();
+                if (isUnHandleException)
+                    ShowException(Consts.RestartWIA);
+ 
                 string strFileName = "";
                 // join all the images that's scanned  to one image tiff file
                 var encoder = new TiffBitmapEncoder();
+                encoder.Compression = TiffCompressOption.Zip;
                 BitmapFrame frame=null;
                 Bitmap bp = null;
                 IntPtr bmpptr,pixptr;
@@ -119,19 +141,19 @@ namespace testdotnettwain
                     ShowException("No Has Any pages");
                     return;
                 }
-                // create temp folder 
+                // create temp folder
                 CreateDirectory(tmpFolder);
                 int picsCount = pics.Count;
                 for (int i = 0; i < pics.Count; i++)
                 {
                     IntPtr img = (IntPtr)pics[i];
-                    //Locks a global memory object and returns a pointer to the first byte of the object's memory block 
+                    //Locks a global memory object and returns a pointer to the first byte of the object's memory block
                     bmpptr = Twain.GlobalLock(img);
                     //Get Pixel Info by handle
                     pixptr = GdiWin32.GetPixelInfo(bmpptr);
                     // create bitmap type
                     bp = GdiWin32.BitmapFromDIB(bmpptr, pixptr);
-
+ 
                     // get bitmap frame for insert him TiffBitmapEncoder
                     frame = Imaging.GetBitmapFrame(bp);
                     if (frame != null)
@@ -140,11 +162,11 @@ namespace testdotnettwain
                     Twain.GlobalUnlock(img);
                     // Get the last error and display it.
                     //int error = Marshal.GetLastWin32Error();
-
+ 
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                 }
-                // genrate file name to temp folder 
+                // genrate file name to temp folder
                 strFileName = GenerateFileTemp(tmpFolder);
                 string strNewFileName = strFileName;
                 _output = new FileStream(strNewFileName, FileMode.OpenOrCreate);
@@ -163,16 +185,16 @@ namespace testdotnettwain
             catch (Exception ex)
             {
                 ShowException("Error : \r\n\r\n" + ex.Message.ToString() + "\r\n\r\n" + ex.StackTrace);
-            }
+            } Log(" End TransferReady");
         }
-
+ 
         private void EndingScan()
         {
             Application.RemoveMessageFilter(this);
             this.Enabled = true;
             this.Activate();
         }
-
+ 
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -186,8 +208,8 @@ namespace testdotnettwain
         {
             Dispose(false);
         }
-
-       
+ 
+      
         /// <summary>
         /// Sharing function for Close Resources output filestream and twain global variable
         /// </summary>
@@ -203,22 +225,22 @@ namespace testdotnettwain
             }
             if (tw != null)
                 tw.Finish();
-
+ 
         }
-
+ 
         private void ShowException(string message)
         {
             if (message != Consts.RestartWIA)
             {
                 MessageBox.Show(null, message, _configManager.ErrorMessgageHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
+ 
             if (Finish != null)
             {
                 Finish(this, message, false, 0);
             }
         }
-
+ 
         private void CreateDirectory(string tmpFolder)
         {
             if (!Directory.Exists(tmpFolder))
@@ -233,12 +255,16 @@ namespace testdotnettwain
                 }
             }
         }
-
+ 
         private string GenerateFileTemp(string tmpFolder)
         {
             var dtString = DateTime.Now.ToString("yyyyMMddhhmmss");
             return tmpFolder + "\\" + Environment.MachineName + dtString + DateTime.Now.Millisecond + ".new.tiff";
         }
-    
+   
     }
 }
+
+
+
+

@@ -2,9 +2,21 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-
+ 
 namespace TwainLib
 {
+    /*       *** thank's god ***         */
+    /*
+     *********************** current ver 1.0.0.1  ******************************
+   */
+    // ver 1.0.0.1
+    //1. add log (CTOR)
+    //2. find wia contain in the word ProductName (Acquire)
+    //3. change version twain to 2.3(TwainDefs.cs)
+ 
+    /// <summary>
+    ///
+    /// </summary>
     public enum TwainCommand
     {
         Not = -1,
@@ -14,14 +26,22 @@ namespace TwainLib
         CloseOk = 3,
         DeviceEvent = 4
     }
-
+ 
+ 
+ 
+ 
     public class Twain
     {
         private const short CountryUSA = 1;
         private const short LanguageUSA = 13;
-
-        public Twain()
+        Action<string> _log;
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="log">add log  ver 1.0.0.1 </param>
+        public Twain(Action<string> log)
         {
+            _log = log;
             appid = new TwIdentity();
             appid.Id = IntPtr.Zero;
             appid.Version.MajorNum = 1;
@@ -35,19 +55,27 @@ namespace TwainLib
             appid.Manufacturer = "NETMaster";
             appid.ProductFamily = "Freeware";
             appid.ProductName = "Hack";
-
+ 
             srcds = new TwIdentity();
             srcds.Id = IntPtr.Zero;
-
+ 
             evtmsg.EventPtr = Marshal.AllocHGlobal(Marshal.SizeOf(winmsg));
-
+            Log("twain version is Major= " + TwProtocol.Major.ToString() + ",Minor=" + TwProtocol.Minor);
+ 
+ 
         }
-
+        void Log(string s)
+        {
+            if (_log != null)
+            {
+                _log(s);
+            }
+        }
         ~Twain()
         {
             Marshal.FreeHGlobal(evtmsg.EventPtr);
         }
-
+ 
         public void Init(IntPtr hwndp)
         {
             Finish();
@@ -61,8 +89,8 @@ namespace TwainLib
                     rc = DSMparent(appid, IntPtr.Zero, TwDG.Control, TwDAT.Parent, TwMSG.CloseDSM, ref hwndp);
             }
         }
-        bool _isSelected = false;
-
+        bool allowSelectScanner = false;
+     
         public void Select()
         {
             TwRC rc;
@@ -73,12 +101,17 @@ namespace TwainLib
                 if (appid.Id == IntPtr.Zero)
                     return;
             }
-            _isSelected = true;
+            allowSelectScanner = true;
+            // ver 1.0.0.1
+            Log("Select your preffer driver... ");
             rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.UserSelect, srcds);
         }
-
+ 
+ 
         public void Acquire()
         {
+            Log("Begin Acquire...");
+            
             TwRC rc;
             CloseSrc();
             if (appid.Id == IntPtr.Zero)
@@ -87,13 +120,35 @@ namespace TwainLib
                 if (appid.Id == IntPtr.Zero)
                     return;
             }
-            if(!_isSelected)
-                rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
-            //SelectByName("TW-Brother");
+            //   rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.OpenDS, srcds);
+            // ver 1.0.0.1
+            if (!allowSelectScanner)
+            {
+                //Find WIA Contain ver 1.0.0.1
+                int driverScount;
+                Log("Allow Select Scanner is Disable ,try find WIA Scanner Driver...");
+                var isFoundWIA = SelectByWIAPrefer(out driverScount);
+                if (!isFoundWIA)
+                {
+                    if (driverScount > 1)
+                    {
+                        Log("Found more then one driver" + driverScount.ToString() + " select  driver... ");
+                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.UserSelect, srcds);
+ 
+                    }
+                    else
+                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
+ 
+                }
+                Log(" preffer driver WIA Found... ");
+            }
             rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.OpenDS, srcds);
+            //LOG ver 1.0.0.1
+            Log("working on " + srcds.ProductName + "... ");
+ 
             if (rc != TwRC.Success)
                 return;
-
+ 
             TwCapability cap = new TwCapability(TwCap.XferCount, -1);
             rc = DScap(appid, srcds, TwDG.Control, TwDAT.Capability, TwMSG.Set, cap);
             if (rc != TwRC.Success)
@@ -101,12 +156,12 @@ namespace TwainLib
                 CloseSrc();
                 return;
             }
-
+ 
             TwUserInterface guif = new TwUserInterface();
-            // show scanner view 
+            // show scanner view
             guif.ShowUI = 1;
             guif.ModalUI = 0;
-
+ 
             guif.ParentHand = hwnd;
             rc = DSuserif(appid, srcds, TwDG.Control, TwDAT.UserInterface, TwMSG.EnableDS, guif);
             if (rc != TwRC.Success)
@@ -115,75 +170,58 @@ namespace TwainLib
                 return;
             }
         }
-        //https://github.com/caspark/snapsy/blob/master/twain
-        public bool SelectByName(string name)
+        /// <summary>
+        /// Find WIA Contain in the ProductName  ver 1.0.0.1
+        /// </summary>
+        /// <param name="countDrivers">How many drivers has on itarator each driver</param>
+        /// <returns>found driver contain in the ProductName with WIA =true, no found =false</returns>
+        public bool SelectByWIAPrefer(out int countDrivers)
         {
-            if (srcds.ProductName == name)
+            var driverBeginWith = "WIA";
+            countDrivers = 0;
+            TwRC rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetFirst, srcds);
+            Log("Get first driver " + srcds.ProductName);
+            countDrivers++;
+            if (srcds.ProductName.ToLower().Contains(driverBeginWith))
             {
+                Log("XFound wia" + srcds.ProductName);
                 return true;
+ 
             }
-            TwRC rc = TwRC.Success;
+            rc = TwRC.Success;
             while (rc == TwRC.Success)
             {
                 rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetNext, srcds);
-                if (srcds.ProductName == name)
+                Log("Get next driver " + srcds.ProductName);
+                countDrivers++;
+                if (srcds.ProductName.Contains(driverBeginWith))
                 {
+                    Log("Found wia" + srcds.ProductName);
                     return true;
                 }
+ 
             }
             return false;
         }
-
-        //http://stackoverflow.com/questions/13357297/is-it-possible-in-twain-to-force-a-scanner-to-set-the-region-to-the-entire-width ????
-        //????
-        //private static TwIdentity GetSource(TwIdentity appid, string name)
-        //{
-        //    var device = new TwIdentity { Id = IntPtr.Zero };
-          
-        //    var rc = DSMentry(appid,  IntPtr.Zero,  TwDG.Control, TwDAT.Identity,  TwMSG.GetFirst,    device);
-            
-        //    if (rc != TwRC.EndOfList &&
-        //        device.ProductName.Equals(name,   StringComparison.OrdinalIgnoreCase))
-        //    {
-        //        return device;
-        //    }
-
-        //    while (rc != TwRC.EndOfList)
-        //    {
-        //        device = new TwIdentity { Id = IntPtr.Zero };
-        //        rc = DSMentry(appid,
-        //                                    IntPtr.Zero,
-        //                                     TwDG.Control, TwDAT.Identity,
-        //                                    TwMSG.GetNext,
-        //                                    device);
-
-        //        if (rc != TwRC.EndOfList &&
-        //           device.ProductName.Equals(name,
-        //                                  StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            return device;
-        //        }
-        //    }
-
-        //    throw new InvalidOperationException("Could not find device");
-        //}
-
+ 
+ 
+ 
         public ArrayList TransferPictures(out bool isUnHandleException)
         {
             isUnHandleException = false;
             ArrayList pics = new ArrayList();
             if (srcds.Id == IntPtr.Zero)
                 return pics;
-
+ 
             TwRC rc;
             IntPtr hbitmap = IntPtr.Zero;
             TwPendingXfers pxfr = new TwPendingXfers();
-
+ 
             do
             {
                 pxfr.Count = 0;
                 hbitmap = IntPtr.Zero;
-
+ 
                 TwImageInfo iinf = new TwImageInfo();
                 rc = DSiinf(appid, srcds, TwDG.Image, TwDAT.ImageInfo, TwMSG.Get, iinf);
                 if (rc != TwRC.Success)
@@ -191,7 +229,7 @@ namespace TwainLib
                     CloseSrc();
                     return pics;
                 }
-
+ 
                 rc = DSixfer(appid, srcds, TwDG.Image, TwDAT.ImageNativeXfer, TwMSG.Get, ref hbitmap);
                 if (rc != TwRC.XferDone)
                 {
@@ -202,22 +240,22 @@ namespace TwainLib
                     CloseSrc();
                     return pics;
                 }
-
+ 
                 rc = DSpxfer(appid, srcds, TwDG.Control, TwDAT.PendingXfers, TwMSG.EndXfer, pxfr);
                 if (rc != TwRC.Success)
                 {
                     CloseSrc();
                     return pics;
                 }
-
+ 
                 pics.Add(hbitmap);
             }
             while (pxfr.Count != 0);
-
+ 
             rc = DSpxfer(appid, srcds, TwDG.Control, TwDAT.PendingXfers, TwMSG.Reset, pxfr);
             return pics;
         }
-
+ 
         /// <summary>
         /// Pass Message Message Queuing of API WIN32
         /// </summary>
@@ -227,9 +265,9 @@ namespace TwainLib
         {
             if (srcds.Id == IntPtr.Zero)
                 return TwainCommand.Not;
-
+ 
             int pos = GetMessagePos();
-
+ 
             winmsg.hwnd = m.HWnd;
             winmsg.message = m.Msg;
             winmsg.wParam = m.WParam;
@@ -237,7 +275,7 @@ namespace TwainLib
             winmsg.time = GetMessageTime();
             winmsg.x = (short)pos;
             winmsg.y = (short)(pos >> 16);
-
+ 
             Marshal.StructureToPtr(winmsg, evtmsg.EventPtr, false);
             evtmsg.Message = 0;
             TwRC rc = DSevent(appid, srcds, TwDG.Control, TwDAT.Event, TwMSG.ProcessEvent, ref evtmsg);
@@ -251,10 +289,10 @@ namespace TwainLib
                 return TwainCommand.CloseOk;
             if (evtmsg.Message == (short)TwMSG.DeviceEvent)
                 return TwainCommand.DeviceEvent;
-
+ 
             return TwainCommand.Null;
         }
-
+ 
         public void CloseSrc()
         {
             TwRC rc;
@@ -270,7 +308,7 @@ namespace TwainLib
                 rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.CloseDS, srcds);
             }
         }
-
+ 
         /// <summary>
         /// close resource of twian object
         /// </summary>
@@ -282,52 +320,49 @@ namespace TwainLib
                 rc = DSMparent(appid, IntPtr.Zero, TwDG.Control, TwDAT.Parent, TwMSG.CloseDSM, ref hwnd);
             appid.Id = IntPtr.Zero;
         }
-
+ 
         private IntPtr hwnd;
         private TwIdentity appid;
         private TwIdentity srcds;
         private TwEvent evtmsg;
         private WINMSG winmsg;
-
-
-
+ 
+ 
+ 
         // ------ DSM entry point DAT_ variants:
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSMparent([In, Out] TwIdentity origin, IntPtr zeroptr, TwDG dg, TwDAT dat, TwMSG msg, ref IntPtr refptr);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSMident([In, Out] TwIdentity origin, IntPtr zeroptr, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwIdentity idds);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSMstatus([In, Out] TwIdentity origin, IntPtr zeroptr, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwStatus dsmstat);
-
-
+ 
+ 
         // ------ DSM entry point DAT_ variants to DS:
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSuserif([In, Out] TwIdentity origin, [In, Out] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, TwUserInterface guif);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSevent([In, Out] TwIdentity origin, [In, Out] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, ref TwEvent evt);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSstatus([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwStatus dsmstat);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DScap([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwCapability capa);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSiinf([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwImageInfo imginf);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSixfer([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, ref IntPtr hbitmap);
-
+ 
         [DllImport("twain_32.dll", EntryPoint = "#1")]
         private static extern TwRC DSpxfer([In, Out] TwIdentity origin, [In] TwIdentity dest, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwPendingXfers pxfr);
-        //http://stackoverflow.com/questions/13357297/is-it-possible-in-twain-to-force-a-scanner-to-set-the-region-to-the-entire-width
-       
-        //[DllImport("twain_32.dll", EntryPoint = "#1")]
-        //internal static extern TwRC DSMentry([In, Out] TwIdentity origin, IntPtr zeroptr, TwDG dg, TwDAT dat, TwMSG msg, [In, Out] TwIdentity idds);
-
+ 
+ 
         [DllImport("kernel32.dll", ExactSpelling = true)]
         internal static extern IntPtr GlobalAlloc(int flags, int size);
         [DllImport("kernel32.dll", ExactSpelling = true)]
@@ -336,25 +371,25 @@ namespace TwainLib
         internal static extern bool GlobalUnlock(IntPtr handle);
         [DllImport("kernel32.dll", ExactSpelling = true)]
         internal static extern IntPtr GlobalFree(IntPtr handle);
-
+ 
         [DllImport("user32.dll", ExactSpelling = true)]
         private static extern int GetMessagePos();
         [DllImport("user32.dll", ExactSpelling = true)]
         private static extern int GetMessageTime();
-
-
+ 
+ 
         [DllImport("gdi32.dll", ExactSpelling = true)]
         private static extern int GetDeviceCaps(IntPtr hDC, int nIndex);
-
+ 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr CreateDC(string szdriver, string szdevice, string szoutput, IntPtr devmode);
-
+ 
         [DllImport("gdi32.dll", ExactSpelling = true)]
         private static extern bool DeleteDC(IntPtr hdc);
-
-
-
-
+ 
+ 
+ 
+ 
         public static int ScreenBitDepth
         {
             get
@@ -366,8 +401,8 @@ namespace TwainLib
                 return bitDepth;
             }
         }
-
-
+ 
+ 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         internal struct WINMSG
         {
@@ -379,7 +414,8 @@ namespace TwainLib
             public int x;
             public int y;
         }
-
-
+ 
+ 
     } // class Twain
 }
+ 
