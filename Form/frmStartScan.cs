@@ -189,6 +189,8 @@ namespace testdotnettwain
             string textFile = e.Argument as string;
             try
             {
+                var result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
+
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
  
@@ -216,18 +218,21 @@ namespace testdotnettwain
                             LogText("Upload To Server :UNKNWON");
  
                         var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
- 
+
                         if (res == true)
                         {
+                            // has err
                             LogText(errDesc);
+                            result.IsSuccess = false;
+                            result.Desc = errDesc;
                         }
                         LogText("Done!");
- 
+
                         // close service client
                         client.Close();
                         // Send Result to Complete Task event hanlder
                         //(backgroundWorker1_RunWorkerCompleted)
-                        e.Result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
+                        e.Result = result;
                     }
                 }
             }
@@ -237,9 +242,8 @@ namespace testdotnettwain
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
                 // Send Result to Complete Task event hanlder
                 //(backgroundWorker1_RunWorkerCompleted)
- 
-                e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
- 
+                e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Unhadle exception" };
+
             }
  
  
@@ -386,6 +390,7 @@ namespace testdotnettwain
         {
             StartScan();
         }
+
         void StartScan(){
             LogText("Start Scanning...");
  
@@ -408,7 +413,6 @@ namespace testdotnettwain
             _frmmain.Acquire();
  
         }
- 
  
         private void FrmmainFinish(frmScanner frmmain, string info, bool isSuccess, int picsCount)
         {
@@ -497,6 +501,8 @@ namespace testdotnettwain
             // string textFile = e.Argument as string;
             try
             {
+                var result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
+
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
  
@@ -513,38 +519,33 @@ namespace testdotnettwain
                         string errDesc;
                         // start service client
                         FileTransferServiceClient client = new FileTransferServiceClient();
-                        // client.ChannelFactory.Credentials.Windows.AllowNtlm = false;
-                        client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
-                        //client.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Delegation;
-                        //client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
- 
+                         client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
+                      
  
                       client.ClientCredentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
-                        //client.ClientCredentials.Windows.ClientCredential=new NetworkCredential("mevaker\\hdmalam", "HDC@ll100");
-                      //client.ClientCredentials.Windows.AllowNtlm = false;
- 
-                        //client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Identification;
                       client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
                       
-                        // client.ClientCredentials.Windows.AllowNtlm = true;
                         if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
                             LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
                         else
                             LogText("Upload To Server :UNKNWON");
  
                         var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
- 
+
                         if (res == true)
                         {
+                            // has err
                             LogText(errDesc);
+                            result.IsSuccess = false;
+                            result.Desc = errDesc;
                         }
                         LogText("Done!");
- 
+
                         // close service client
                         client.Close();
                         // Send Result to Complete Task event hanlder
                         //(backgroundWorker1_RunWorkerCompleted)
- 
+                    
                     }
                 }
             }
@@ -552,10 +553,7 @@ namespace testdotnettwain
             {
                 LogText("Exception : " + ex.Message);
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
-                // Send Result to Complete Task event hanlder
-                //(backgroundWorker1_RunWorkerCompleted)
- 
- 
+               
             }
         }
  

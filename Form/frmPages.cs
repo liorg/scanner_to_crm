@@ -141,6 +141,7 @@ namespace testdotnettwain
             else
             {
                 LogText("Error Occur!");
+                MessageBox.Show(result.Desc);
             }
             Close();
         }
@@ -156,6 +157,7 @@ namespace testdotnettwain
             string textFile = e.Argument as string;
             try
             {
+                var result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
 
                 // get some info about the input file
                 System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
@@ -178,14 +180,6 @@ namespace testdotnettwain
                         client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
                        
                         client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
-                      
-                        
-                        
-                        
-                        //client.ChannelFactory.Credentials.Windows.ClientCredential.UserName = "hdmalam";
-                        //client.ChannelFactory.Credentials.Windows.ClientCredential.Password = "HDC@ll100";
-                        //client.ChannelFactory.Credentials.Windows.ClientCredential.Domain = "mevaker";
-                       // LogText("User :"+client.ChannelFactory.Credentials.Windows.ClientCredential.UserName);
                         if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
                             LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
 
@@ -200,7 +194,10 @@ namespace testdotnettwain
 
                         if (res == true)
                         {
+                            // has err
                             LogText(errDesc);
+                            result.IsSuccess = false;
+                            result.Desc = errDesc;
                         }
                         LogText("Done!");
 
@@ -208,7 +205,7 @@ namespace testdotnettwain
                         client.Close();
                         // Send Result to Complete Task event hanlder
                         //(backgroundWorker1_RunWorkerCompleted)
-                        e.Result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
+                        e.Result = result;
                     }
                 }
             }
@@ -218,66 +215,9 @@ namespace testdotnettwain
                 if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
                 // Send Result to Complete Task event hanlder
                 //(backgroundWorker1_RunWorkerCompleted)
-
-                e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
+                e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Unhadle exception" };
 
             }
-            //string textFile = e.Argument as string;
-            //try
-            //{
-            //    // get some info about the input file
-            //    System.IO.FileInfo fileInfo = new System.IO.FileInfo(textFile);
-
-            //    // show start message
-            //    LogText("Starting uploading " + fileInfo.Name);
-            //    LogText("Size : " + fileInfo.Length);
-
-            //    // open input stream
-            //    using (System.IO.FileStream stream = new System.IO.FileStream(textFile, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            //    {
-            //        string errDesc = "";
-            //        using (StreamWithProgress uploadStreamWithProgress = new StreamWithProgress(stream))
-            //        {
-            //            uploadStreamWithProgress.ProgressChanged += uploadStreamWithProgress_ProgressChanged;
-
-            //            // start service client
-            //            FileTransferServiceClient client = new FileTransferServiceClient();
-            //            if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
-            //            {
-            //                LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
-            //            }
-            //            else
-            //            {
-            //                LogText("Upload To Server :UNKNWON");
-            //            }
-            //            // upload file
-            //        //    client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress);
-            //            //client.UploadFile(fileInfo.Name, fileInfo.Length, Guid.NewGuid(), "12", uploadStreamWithProgress);
-            //            var res = client.UploadFile(fileInfo.Name, fileInfo.Length, Guid.NewGuid(), "12", uploadStreamWithProgress, out  errDesc);
-            //            if (res == true)
-            //            {
-            //                LogText(errDesc);
-            //            }
-            //            LogText("Done!");
-
-            //            // close service client
-            //            client.Close();
-
-            //            e.Result = new FileInfoUpload { IsSuccess = true, Path = textFile, Desc = "" };
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    LogText("Exception : " + ex.Message);
-            //    if (ex.InnerException != null) LogText("Inner Exception : " + ex.InnerException.Message);
-            //    e.Result = new FileInfoUpload { IsSuccess = false, Path = textFile, Desc = "Ok" };
-
-            //}
-            //finally
-            //{
-            //}
-
         }
 
         void uploadStreamWithProgress_ProgressChanged(object sender, StreamWithProgress.ProgressChangedEventArgs e)
