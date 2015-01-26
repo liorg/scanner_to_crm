@@ -1,8 +1,11 @@
 using System;
-using System.Collections;
+
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
- 
+using System.Collections;
+using System.Collections.Generic;
+
+using System.Linq;
 namespace TwainLib
 {
     /*       *** thank's god ***         */
@@ -178,11 +181,16 @@ namespace TwainLib
         public bool SelectByWIAPrefer(out int countDrivers)
         {
             var driverBeginWith = "WIA";
+            var firstDriver = "";
+            var driversOnlyWIA=ScannerToCrm.Mechanism.Twain.DriversWIAOnly.GetSinglton().GetDrivers;
+
             countDrivers = 0;
             TwRC rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetFirst, srcds);
             Log("Get first driver " + srcds.ProductName);
+            firstDriver = srcds.ProductName;
             countDrivers++;
-            if (srcds.ProductName.ToLower().Contains(driverBeginWith))
+          //  if(driversOnlyWIA.Where(String.Compare(
+           if (srcds.ProductName.ToLower().Contains(driverBeginWith))
             {
                 Log("XFound wia" + srcds.ProductName);
                 return true;
@@ -193,7 +201,11 @@ namespace TwainLib
             {
                 rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetNext, srcds);
                 Log("Get next driver " + srcds.ProductName);
-                countDrivers++;
+               if(firstDriver!=srcds.ProductName)
+                     countDrivers++;
+                else
+                   Log("some  driver " + srcds.ProductName);
+
                 if (srcds.ProductName.Contains(driverBeginWith))
                 {
                     Log("Found wia" + srcds.ProductName);
@@ -203,8 +215,8 @@ namespace TwainLib
             }
             return false;
         }
- 
- 
+
+        public bool IsWIAProtocol { get; set; }
  
         public ArrayList TransferPictures(out bool isUnHandleException)
         {

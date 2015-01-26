@@ -102,9 +102,18 @@ namespace testdotnettwain
                 case TwainCommand.Null:
                     {
                       //  Log("PreFilterMessage TwainCommand.Null");
-                        EndingScan();
-                        tw.CloseSrc();
-                        ShowException("TwainCommand.Null is null !!!!");
+                        if (tw.IsWIAProtocol)
+                        {
+                            // _stopWatch.Stop();
+                            //  _stopWatch.Reset();
+                            EndingScan();
+                            tw.CloseSrc();
+                            ShowException("TwainCommand.Null is null !!!! on WIA Protocol");
+                        }
+
+                        //EndingScan();
+                        //tw.CloseSrc();
+                        //ShowException("TwainCommand.Null is null !!!!");
                         break;
                     }
             }

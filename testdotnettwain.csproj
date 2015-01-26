@@ -141,6 +141,7 @@
     <Compile Include="Mechanism\DataModel\FileInfoUpload.cs" />
     <Compile Include="Mechanism\DataModel\SendObjDetail.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
+    <Compile Include="Mechanism\Twain\DriversWIAOnly.cs" />
     <Compile Include="Mechanism\UI\StreamWithProgress.cs" />
     <Compile Include="Mechanism\Util\Utils.cs" />
     <Compile Include="old\Form1.cs">
