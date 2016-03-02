@@ -16,7 +16,7 @@ namespace Lior.Scanner.Mock
         }
         public void Upload(byte[] data, string field1, string field2, string field3)
         {
-            var file = field1 + "_" + field2 + "_" + field3 + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            var file = field1 + "_" + field2 + "_" + field3 + "_" + DateTime.Now.ToString("yyyyMMddHHmmss")+".tif";
             var temp = @"C:\\temp\scanner\mock";
             var path = Path.Combine(temp, file);
             File.WriteAllBytes(path, data);

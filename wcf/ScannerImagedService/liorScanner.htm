@@ -293,6 +293,7 @@
         -->
     </style>
     <script>
+        var TRUE = "1"; var FALSE = "0";
         var querystringKey = {
             Field1Key: "Field1", Field2Key: "Field2", Field3Key: "Field3",
             ShowScannersKey: "ShowScanners",
@@ -313,13 +314,14 @@
                 field1: field1,
                 field2: field2,
                 field3: field3,
-                ShowScanners: "1",
+                ShowScanners: TRUE,
                 UrlUploader: "http://localhost:3434/ServiceFileTransferService.svc/mex",
-                TmpFolder: "C:\\\\temp\\scanner\\client\\web"
+                TmpFolder: "C:\\\\temp\\scanner\\client\\web",
+                DeleteFileAfterUploading: FALSE
             };
 
             var q = querystringKey;
-            var urlScanerBuilder = "TZTwain.application" + "?" + q.Field1Key + "=" + s.field1 + "&" + q.Field2Key + "=" + s.field2 + "&" + q.Field3Key + "=" + s.field3 + "&" + q.ShowScannersKey + "=" + s.ShowScanners + "&" + q.UrlUploaderKey + "=" + s.UrlUploader + "&" + q.TmpFolderKey + "=" + s.TmpFolder;
+            var urlScanerBuilder = "TZTwain.application" + "?" + q.Field1Key + "=" + s.field1 + "&" + q.Field2Key + "=" + s.field2 + "&" + q.Field3Key + "=" + s.field3 + "&" + q.ShowScannersKey + "=" + s.ShowScanners + "&" + q.UrlUploaderKey + "=" + s.UrlUploader + "&" + q.TmpFolderKey + "=" + s.TmpFolder + "&" + q.DeleteFileAfterUploadingKey + "=" + s.DeleteFileAfterUploading;
             alert(urlScanerBuilder);
             window.open(urlScanerBuilder);
             // setTimeout(function () { window.close(); }, 3000);
