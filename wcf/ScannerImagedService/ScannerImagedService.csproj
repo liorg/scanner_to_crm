@@ -59,7 +59,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="liorScanner.htm" />
+    <Content Include="publish.htm" />
     <Content Include="ServiceFileTransferService.svc" />
+    <Content Include="setup.exe" />
+    <Content Include="test.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -76,13 +80,31 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Application Files\TZTwain_1_0_0_19\App.ico.deploy" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\HTML\UpgradeLog.htm.deploy" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\HTML\UpgradeLog.XML.deploy" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\TZTwain.application" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\TZTwain.exe.config.deploy" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\TZTwain.exe.deploy" />
+    <Content Include="Application Files\TZTwain_1_0_0_19\TZTwain.exe.manifest" />
     <None Include="Properties\PublishProfiles\publishUploading.pubxml" />
+    <Content Include="TZTwain.application" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contract\Lior.Scanner.Contract\Lior.Scanner.Contract.csproj">
+      <Project>{75eb0f13-98fd-462e-9b7f-1e559be3965b}</Project>
+      <Name>Lior.Scanner.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Mock\Lior.Scanner.Mock\Lior.Scanner.Mock.csproj">
+      <Project>{0b83dc79-6707-4534-906c-3741128ce75f}</Project>
+      <Name>Lior.Scanner.Mock</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -29,10 +29,30 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>0.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>C:\Users\lior_gr\Documents\GitHub\scanner_to_crm\wcf\ScannerImagedService\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://localhost:3434/</InstallUrl>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <TrustUrlParameters>true</TrustUrlParameters>
+    <ApplicationRevision>20</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
@@ -71,6 +91,18 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>024F91A76F92E54CA85E178763BCC095B28BCE6A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>testdotnettwain_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <COMReference Include="stdole">
@@ -142,6 +174,7 @@
     <Compile Include="Mechanism\DataModel\SendObjDetail.cs" />
     <Compile Include="Mechanism\GDI\Imaging.cs" />
     <Compile Include="Mechanism\Twain\DriversWIAOnly.cs" />
+    <Compile Include="Mechanism\Twain\Win32Api.cs" />
     <Compile Include="Mechanism\UI\StreamWithProgress.cs" />
     <Compile Include="Mechanism\Util\Utils.cs" />
     <Compile Include="old\Form1.cs">
@@ -193,8 +226,8 @@
     <Content Include="App.ico" />
     <Content Include="HTML\UpgradeLog.htm" />
     <Content Include="HTML\UpgradeLog.XML" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.disco" />
     <None Include="Docs\TWAIN-2.3-Spec.pdf" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.disco" />
     <None Include="Service References\UploadLargeImages\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -220,19 +253,22 @@
     <EmbeddedResource Include="Form\frmScanner.resx">
       <DependentUpon>frmScanner.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Docs\SCANERaDDoN.docx" />
     <None Include="Docs\twain 2.2 spec.pdf" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.wsdl" />
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService3.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.wsdl" />
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService31.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UploadLargeImages\ServiceFileTransferService32.xsd">
+    <None Include="Service References\UploadLargeImages\ServiceFileTransferService2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="testdotnettwain_TemporaryKey.pfx" />
     <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />
     <None Include="Web References\Crmdiscovery\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -286,6 +322,28 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mechanism\wia\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

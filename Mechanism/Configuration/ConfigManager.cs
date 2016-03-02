@@ -11,7 +11,9 @@ namespace testdotnettwain.Mechanism
     public class ConfigManager
     {
         public const string TRUE = "1";
-        public const string ObjectIdKey = "ObjectId";
+        public const string Field1Key = "Field1";
+        public const string Field2Key = "Field2";
+        public const string Field3Key = "Field3";
         public const string ShowScannersKey = "ShowScanners";
         public const string UrlUploaderKey = "UrlUploader";
         public const string ShowPreviewKey = "ShowPreview";

@@ -34,13 +34,17 @@ namespace testdotnettwain
     {
         Action<string> LogText;
         string _path;
-        Guid _objectId;
+        string _field1;
+        string _field2;
+        string _field3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private ConfigManager _configManager;
-        public frmPages(string path,Guid objId, ConfigManager configManager, Action<string> log)
+        public frmPages(string path, string field1, string field2, string field3, ConfigManager configManager, Action<string> log)
         {
             InitializeComponent();
-            _objectId = objId;
+            _field1 = field1;
+            _field2 = field2;
+            _field3 = field3;
             _configManager = configManager;
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             backgroundWorker1.WorkerReportsProgress = true;
@@ -175,11 +179,11 @@ namespace testdotnettwain
                         string errDesc;
                         // start service client
                         FileTransferServiceClient client = new FileTransferServiceClient();
-                        client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
+                       client.Endpoint.Address = new EndpointAddress(_configManager.UrlUploader);
 
                         client.ClientCredentials.Windows.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
                        
-                        client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
+                       client.ChannelFactory.Credentials.Windows.ClientCredential = System.Net.CredentialCache.DefaultNetworkCredentials;
                         if (client.Endpoint != null && client.Endpoint.Address != null && client.Endpoint.Address.Uri != null)
                             LogText("Upload To Server :" + client.Endpoint.Address.Uri.Host + ":" + client.Endpoint.Address.Uri.Port);
 
@@ -190,7 +194,7 @@ namespace testdotnettwain
                         // upload file
                         //client.UploadFile(fileInfo.Name, fileInfo.Length, uploadStreamWithProgress,Guid.NewGuid(),"12");
 
-                        var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
+                        var res = client.UploadFile(_field1,_field2,_field3, fileInfo.Name, fileInfo.Length, uploadStreamWithProgress, out  errDesc);
 
                         if (res == true)
                         {

@@ -44,7 +44,14 @@ namespace testdotnettwain
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         FrmConfigDetails _fconfig;
-        Guid _objectId = Guid.Empty;
+        private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripSeparator toolStripSeparator3;
+       // Guid _objectId = Guid.Empty;
+        string _field1;
+        string _field2;
+        string _field3;
         //for test
  
         public frmStartScan()
@@ -63,7 +70,7 @@ namespace testdotnettwain
         public frmStartScan(string version, NameValueCollection nameValue)
         {
             _version = version;
- 
+          
             _configManager = ConfigManager.GetSinglton();
  
             InitializeComponent();
@@ -74,31 +81,56 @@ namespace testdotnettwain
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
+
+            LogText("version:" + _version);
             if (nameValue != null)
             {
  
-                var objectid = nameValue.Get(ConfigManager.ObjectIdKey);
-                if (!String.IsNullOrEmpty(objectid))
+                var field1 = nameValue.Get(ConfigManager.Field1Key);
+                if (!String.IsNullOrEmpty(field1))
                 {
-                    if (Guid.TryParse(objectid, out _objectId))
-                        LogText("Get Doc crm id" + _objectId.ToString());
+                    _field1 = field1;
+                  //  if (Guid.TryParse(objectid, out _objectId))
+                 //      LogText("Get Doc  id" + _objectId.ToString());
+                    LogText("field1" + _field1);
                 }
                 else
-                    LogText("no Geting any Doc crm Id");
- 
+                    LogText("no Geting any Doc field1");
+
+                var field2 = nameValue.Get(ConfigManager.Field2Key);
+                if (!String.IsNullOrEmpty(field2))
+                {
+                    _field2 = field2;
+                    LogText("field2" + _field2);
+                }
+                else
+                    LogText("no Geting any Doc field2");
+
+                var field3 = nameValue.Get(ConfigManager.Field3Key);
+                if (!String.IsNullOrEmpty(field3))
+                {
+                    _field3 = field3;
+                    LogText("field3" + _field3);
+                }
+                else
+                    LogText("no Geting any Doc field3");
+
                 var urlUploader = nameValue.Get(ConfigManager.UrlUploaderKey);
                 if (!String.IsNullOrEmpty(urlUploader))
                 {
                     // MessageBox.Show(urlUploader);
                     // MessageBox.Show(_configManager.UrlUploader);
                     _configManager.UrlUploader = urlUploader;
+                    LogText("UrlUploader:" + _configManager.UrlUploader);
                     // MessageBox.Show(_configManager.UrlUploader);
                 }
  
                 var showScanners = nameValue.Get(ConfigManager.ShowScannersKey);
                 if (!String.IsNullOrEmpty(showScanners))
+                {
                     _configManager.ShowScanners = showScanners;
- 
+                    LogText("ShowScanners:" + _configManager.ShowScanners);
+                }
                 var showPreview = nameValue.Get(ConfigManager.ShowPreviewKey);
                 if (!String.IsNullOrEmpty(showPreview))
                     _configManager.ShowPreview = showPreview;
@@ -109,11 +141,17 @@ namespace testdotnettwain
  
                 var tmpFolder = nameValue.Get(ConfigManager.TmpFolderKey);
                 if (!String.IsNullOrEmpty(tmpFolder))
+                {
                     _configManager.TmpFolder = tmpFolder;
+                    LogText("TmpFolder:" + _configManager.TmpFolder);
+                }
  
                 var deleteFileAfterUploading = nameValue.Get(ConfigManager.DeleteFileAfterUploadingKey);
                 if (!String.IsNullOrEmpty(deleteFileAfterUploading))
+                {
                     _configManager.DeleteFileAfterUploading = deleteFileAfterUploading;
+                    LogText("DeleteFileAfterUploading:" + _configManager.DeleteFileAfterUploading);
+                }
             }
             _fconfig = new FrmConfigDetails(_configManager);
         }
@@ -217,7 +255,7 @@ namespace testdotnettwain
                         else
                             LogText("Upload To Server :UNKNWON");
  
-                        var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
+                        var res = client.UploadFile(_field1,_field2,_field3, fileInfo.Name, fileInfo.Length, uploadStreamWithProgress, out  errDesc);
 
                         if (res == true)
                         {
@@ -279,11 +317,15 @@ namespace testdotnettwain
             this.restartWIAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // BtnScan
-            //
+            // 
             this.BtnScan.BackColor = System.Drawing.Color.Bisque;
             this.BtnScan.Location = new System.Drawing.Point(8, 66);
             this.BtnScan.Name = "BtnScan";
@@ -292,83 +334,111 @@ namespace testdotnettwain
             this.BtnScan.Text = "סרוק";
             this.BtnScan.UseVisualStyleBackColor = false;
             this.BtnScan.Click += new System.EventHandler(this.BtnScan_Click);
-            //
+            // 
             // progressBar1
-            //
+            // 
             this.progressBar1.Location = new System.Drawing.Point(8, 37);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(408, 23);
             this.progressBar1.TabIndex = 11;
-            //
+            // 
             // LogListBox
-            //
-            this.LogListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.LogListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LogListBox.FormattingEnabled = true;
             this.LogListBox.IntegralHeight = false;
             this.LogListBox.Location = new System.Drawing.Point(8, 103);
             this.LogListBox.Name = "LogListBox";
-            this.LogListBox.Size = new System.Drawing.Size(408, 60);
+            this.LogListBox.Size = new System.Drawing.Size(399, 126);
             this.LogListBox.TabIndex = 12;
-            //
+            // 
             // menuStrip1
-            //
+            // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(429, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(420, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
-            //
+            // 
             // helpToolStripMenuItem
-            //
+            // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripSeparator1,
             this.restartWIAToolStripMenuItem,
             this.toolStripSeparator2,
-            this.configurationToolStripMenuItem});
+            this.toolStripMenuItem3,
+            this.toolStripSeparator3,
+            this.configurationToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.exitToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
-            //
+            // 
             // toolStripMenuItem1
-            //
+            // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem1.Text = "About";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.About_Click);
-            //
+            // 
             // toolStripSeparator1
-            //
+            // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
-            //
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
             // restartWIAToolStripMenuItem
-            //
+            // 
             this.restartWIAToolStripMenuItem.Name = "restartWIAToolStripMenuItem";
-            this.restartWIAToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.restartWIAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.restartWIAToolStripMenuItem.Text = "Restart WIA";
             this.restartWIAToolStripMenuItem.Click += new System.EventHandler(this.RestartWia_Click);
-            //
+            // 
             // toolStripSeparator2
-            //
+            // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(145, 6);
-            //
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            // 
             // configurationToolStripMenuItem
-            //
+            // 
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.configurationToolStripMenuItem.Text = "Configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.Configuration_Click);
-            //
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Text = "Clean Log";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
             // frmStartScan
-            //
+            // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(429, 167);
+            this.ClientSize = new System.Drawing.Size(420, 233);
             this.Controls.Add(this.LogListBox);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.BtnScan);
@@ -381,7 +451,7 @@ namespace testdotnettwain
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
- 
+
         }
         #endregion
  
@@ -456,7 +526,7 @@ namespace testdotnettwain
      
         void ShowPrev(string path)
         {
-            using (var pages = new frmPages(path,_objectId, _configManager, LogText))
+            using (var pages = new frmPages(path,_field1,_field2,_field3, _configManager, LogText))
             {
                 pages.ShowDialog();
             }
@@ -530,7 +600,7 @@ namespace testdotnettwain
                         else
                             LogText("Upload To Server :UNKNWON");
  
-                        var res = client.UploadFile(fileInfo.Name, fileInfo.Length, _objectId, "12", uploadStreamWithProgress, out  errDesc);
+                        var res = client.UploadFile(_field1,_field2,_field3,  fileInfo.Name, fileInfo.Length, uploadStreamWithProgress, out  errDesc);
 
                         if (res == true)
                         {
@@ -561,6 +631,16 @@ namespace testdotnettwain
         {
             //wj_class1 computer
             StartScan();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            LogListBox.Items.Clear();
         }
     }
  

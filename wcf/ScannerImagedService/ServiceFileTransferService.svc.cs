@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Lior.Scanner.Contract;
+using Lior.Scanner.Mock;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -19,38 +22,52 @@ namespace FileService
             ResponseBase res = new ResponseBase();
             try
             {
-                // report start
-                Console.WriteLine("Start uploading " + request.FileName);
-                Console.WriteLine("Size " + request.Length);
-                var filePathSving = System.Configuration.ConfigurationManager.AppSettings["FilePathSving"];
-                filePathSving += @"\Upload";
-                // create output folder, if does not exist       
-                if (!System.IO.Directory.Exists(filePathSving)) System.IO.Directory.CreateDirectory(filePathSving);
-
-                // kill target file, if already exists
-                string filePath = System.IO.Path.Combine(filePathSving, request.FileName + "_" + request.ObjType);
-                if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
-
-                int chunkSize = 2048;
+               
+                 int chunkSize = 2048;
+                 byte[] content = null; string filePath = "";
+                System.IO.MemoryStream writeStreamMemo = new System.IO.MemoryStream();
                 byte[] buffer = new byte[chunkSize];
+                
+                    // report start
+                    Console.WriteLine("Start uploading " + request.FileName);
+                    Console.WriteLine("Size " + request.Length);
+                    var filePathSving = System.Configuration.ConfigurationManager.AppSettings["FilePathSving"];
 
-                using (System.IO.FileStream writeStream = new System.IO.FileStream(filePath, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
-                {
-                    do
+                    if (!String.IsNullOrWhiteSpace(filePathSving))
                     {
-                        // read bytes from input stream
-                        int bytesRead = request.FileByteStream.Read(buffer, 0, chunkSize);
-                        if (bytesRead == 0) break;
+                        filePathSving += @"\Upload";
+                        // create output folder, if does not exist       
+                        if (!System.IO.Directory.Exists(filePathSving)) System.IO.Directory.CreateDirectory(filePathSving);
 
-                        // write bytes to output stream
-                        writeStream.Write(buffer, 0, bytesRead);
-                    } while (true);
+                        // kill target file, if already exists
+                        filePath = System.IO.Path.Combine(filePathSving, request.FileName + "_" + request.Field2);
 
-                    // report end
-                    Console.WriteLine("Done!");
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+                    }
+                    using (MemoryStream writeStream = new MemoryStream())
+                    {
+                        do
+                        {
+                            // read bytes from input stream
+                            int bytesRead = request.FileByteStream.Read(buffer, 0, chunkSize);
+                            if (bytesRead == 0) break;
 
-                    writeStream.Close();
-                }
+                            // write bytes to output stream
+                            writeStream.Write(buffer, 0, bytesRead);
+                        } 
+                        while (true);
+
+                        if (!String.IsNullOrWhiteSpace(filePath))
+                            System.IO.File.WriteAllBytes(filePath + "1.tiff", writeStream.ToArray());
+                        
+                        content = writeStream.ToArray();
+                        writeStream.Close();
+                    }
+
+                   
+                IScannerService scannerService = new MockScannerService();
+                scannerService.Upload(content, request.Field1, request.Field2, request.Field3);
             }
             catch (Exception e)
             {
@@ -60,9 +77,9 @@ namespace FileService
             }
 
             return res;
-            
+
         }
 
-       
+
     }
 }

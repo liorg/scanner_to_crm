@@ -19,8 +19,9 @@ namespace testdotnettwain
 
             if (ApplicationDeployment.IsNetworkDeployed)
             {
-                string queryString = ApplicationDeployment.CurrentDeployment.ActivationUri != null ? ApplicationDeployment.CurrentDeployment.ActivationUri.Query : "ddd";
-                // MessageBox.Show(queryString);
+              //  MessageBox.Show(ApplicationDeployment.CurrentDeployment.ActivationUri.AbsolutePath);
+                string queryString = ApplicationDeployment.CurrentDeployment.ActivationUri != null ? ApplicationDeployment.CurrentDeployment.ActivationUri.Query : "";
+                //MessageBox.Show(queryString);
                 nameValueTable = HttpUtility.ParseQueryString(queryString);
             }
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
@@ -39,17 +40,17 @@ namespace testdotnettwain
             {
                 #region mocking
                 //for test
-                Application.Run(new frmStartScan("111", null));
+                //Application.Run(new frmStartScan("111", null));
                 #endregion
 
                 #region prod
-                //String name = Process.GetCurrentProcess().ProcessName;
-                //Process[] localByName = Process.GetProcessesByName(name);
-                //NameValueCollection nameValue = null;
-                //if (localByName.Length > 1) Environment.Exit(0);
-                //nameValue = GetQueryStringParameters();
+                String name = Process.GetCurrentProcess().ProcessName;
+                Process[] localByName = Process.GetProcessesByName(name);
+                NameValueCollection nameValue = null;
+                if (localByName.Length > 1) Environment.Exit(0);
+                nameValue = GetQueryStringParameters();
 
-                //Application.Run(new frmStartScan(_version, nameValue));
+                Application.Run(new frmStartScan(_version, nameValue));
                 #endregion
             }
             catch (Exception ex)

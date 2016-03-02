@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Linq;
 
 using System.Collections.Generic;
+using testdotnettwain.Mechanism.Twain;
 
 namespace TwainLib
 {
@@ -634,9 +635,27 @@ namespace TwainLib
                     rc = DSstatus(appid, srcds, TwDG.Control, TwDAT.Status, TwMSG.Get, dsmstatus);
 
                 }
-
-                rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.CloseDS, srcds);
-
+                //http://www.twainforum.org/viewtopic.php?p=15089&sid=2b9cb062441dacd49de8a5afd8129078
+                /*
+                 
+                 Found my problem. Was due to the way the source was being closed.
+                I used CloseDSOK with Windows 8 and CloseDS with Windows 7.
+                 */
+                OS osver = Win32Api.GetOS();
+                switch (osver)
+                {
+                    case OS._2000:
+                    case OS.XP:
+                    case OS.Server2003:
+                    case OS.Vista:
+                    case OS.Server2008:
+                    case OS._7:
+                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.CloseDS, srcds);
+                        break;
+                    default:
+                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.CloseDSOK, srcds);
+                        break;
+                }
             }
 
         }

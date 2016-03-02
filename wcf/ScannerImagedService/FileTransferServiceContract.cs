@@ -28,10 +28,13 @@ namespace FileService
         public System.IO.Stream FileByteStream;
 
         [MessageHeader]
-        public Guid ObjId;
+        public string Field1;
 
         [MessageHeader]
-        public string ObjType;
+        public string Field2;
+
+        [MessageHeader]
+        public string Field3;
 
         public void Dispose()
         {
