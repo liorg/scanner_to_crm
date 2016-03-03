@@ -21,6 +21,8 @@ namespace testdotnettwain.Mechanism
         public const string CloseScannerAutoKey = "CloseScannerAuto";
         public const string DeleteFileAfterUploadingKey = "DeleteFileAfterUploading";
         public const string RestartWIAAutoKey = "RestartWIAAuto";
+        public const string PrefferDriverKey = "PrefferDriver";
+
         static ConfigManager _configManager;
         public static ConfigManager GetSinglton()
         {
@@ -36,6 +38,7 @@ namespace testdotnettwain.Mechanism
         static string _urlUploader;
         static string _closeScannerAuto;
         static string _deleteFileAfterUploading;
+        static string _prefferDriver;
 
         public string UrlUploader
         {
@@ -52,6 +55,23 @@ namespace testdotnettwain.Mechanism
                 _urlUploader = value;
             }
         }
+
+        public string PrefferDriver
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_prefferDriver))
+                {
+                    _prefferDriver = ConfigurationManager.AppSettings[PrefferDriverKey];
+                }
+                return _prefferDriver;
+            }
+            set
+            {
+                _prefferDriver = value;
+            }
+        }
+
 
         public string ShowScanners
         {

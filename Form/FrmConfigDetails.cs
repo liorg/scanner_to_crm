@@ -31,6 +31,8 @@ namespace ScannerToCrm
             lblUri.Text = configManager.UrlUploader;
             chkWIA.Checked = configManager.RestartWIAAuto == ConfigManager.TRUE ? true : false;
             chkShowScanners.Checked = configManager.ShowScanners == ConfigManager.TRUE ? true : false;
+            lblPreferDriver.Text = configManager.PrefferDriver;
+
         }
         private void label1_Click(object sender, EventArgs e)
         {

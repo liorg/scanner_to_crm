@@ -302,26 +302,35 @@
             TmpFolderKey: "tmpFolder",
             CloseScannerAutoKey: "CloseScannerAuto",
             DeleteFileAfterUploadingKey: "DeleteFileAfterUploading",
-            RestartWIAAutoKey: "RestartWIAAuto"
+            RestartWIAAutoKey: "RestartWIAAuto",
+            PrefferDriverKey: "PrefferDriver"
         };
 
         function Scanner_onclick() {
+            /*
+            HP Scanjet G2410 TWAIN
+            WIA-HP Scanjet G2410
+            */
             var field1 = document.getElementById("txtField1").value;
             var field2 = document.getElementById("txtField2").value;
             var field3 = document.getElementById("txtField3").value;
-          
+
+            var urlUpload = document.getElementById("txtUrl").value;
+            var prefferDriver =encodeURIComponent( document.getElementById("txtPrefferDrive").value);
+            var showScanners = document.getElementById("txtShowScanners").value;
             var s = {
                 field1: field1,
                 field2: field2,
                 field3: field3,
-                ShowScanners: TRUE,
+                ShowScanners: showScanners,
                 UrlUploader: "http://localhost:3434/ServiceFileTransferService.svc/mex",
                 TmpFolder: "C:\\\\temp\\scanner\\client\\web",
-                DeleteFileAfterUploading: FALSE
+                DeleteFileAfterUploading: FALSE,
+                PrefferDriver: prefferDriver
             };
 
             var q = querystringKey;
-            var urlScanerBuilder = "TZTwain.application" + "?" + q.Field1Key + "=" + s.field1 + "&" + q.Field2Key + "=" + s.field2 + "&" + q.Field3Key + "=" + s.field3 + "&" + q.ShowScannersKey + "=" + s.ShowScanners + "&" + q.UrlUploaderKey + "=" + s.UrlUploader + "&" + q.TmpFolderKey + "=" + s.TmpFolder + "&" + q.DeleteFileAfterUploadingKey + "=" + s.DeleteFileAfterUploading;
+            var urlScanerBuilder = "TZTwain.application" + "?" + q.Field1Key + "=" + s.field1 + "&" + q.Field2Key + "=" + s.field2 + "&" + q.Field3Key + "=" + s.field3 + "&" + q.ShowScannersKey + "=" + s.ShowScanners + "&" + q.UrlUploaderKey + "=" + s.UrlUploader + "&" + q.PrefferDriverKey + "=" + s.PrefferDriver + "&" + q.TmpFolderKey + "=" + s.TmpFolder + "&" + q.DeleteFileAfterUploadingKey + "=" + s.DeleteFileAfterUploading;
             alert(urlScanerBuilder);
             window.open(urlScanerBuilder);
             // setTimeout(function () { window.close(); }, 3000);
@@ -401,7 +410,7 @@
                                         <spacer type="block" width="10" />
                                     </td>
                                     <td>
-                                        <input type="text" value="Field2" id="txtField3" /></td>
+                                        <input type="text" value="Field3" id="txtField3" /></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3">&nbsp;</td>
@@ -410,6 +419,34 @@
                                 <tr>
                                     <td colspan="3">&nbsp;</td>
                                 </tr>
+
+                                <tr>
+                                    <td><b>url Upload:</b></td>
+                                    <td width="5">
+                                        <spacer type="block" width="10" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="http://localhost:3434/ServiceFileTransferService.svc/mex" id="txtUrl" /></td>
+                                </tr>
+
+                                 <tr>
+                                    <td><b>Prefer driver:</b></td>
+                                    <td width="5">
+                                        <spacer type="block" width="10" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="HP Scanjet G2410 TWAIN" id="txtPrefferDrive" /></td>
+                                </tr> 
+
+                                 <tr>
+                                    <td><b>Show Sanner List: (1=True,0=False)</b></td>
+                                    <td width="5">
+                                        <spacer type="block" width="10" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="0" id="txtShowScanners" /></td>
+                                </tr> 
+
                                 <tr>
                                     <td colspan="3">
                                         <button onclick="Scanner_onclick()">סרוק</button>

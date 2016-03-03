@@ -57,13 +57,13 @@ namespace testdotnettwain
             this.Enabled = false;
  
             Application.AddMessageFilter(this);
- 
-            tw.Acquire();
+
+            tw.Acquire(_configManager.PrefferDriver);
         }
  
         bool IMessageFilter.PreFilterMessage(ref Message m)
         {
-            Log("PreFilterMessage begin");
+            //Log("PreFilterMessage begin");
            
             TwainCommand cmd = tw.PassMessage(ref m);
             if (cmd == TwainCommand.Not)
@@ -117,7 +117,7 @@ namespace testdotnettwain
                         break;
                     }
             }
-            Log("PreFilterMessage end");
+           // Log("PreFilterMessage end");
             return true;
         }
  

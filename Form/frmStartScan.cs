@@ -118,13 +118,17 @@ namespace testdotnettwain
                 var urlUploader = nameValue.Get(ConfigManager.UrlUploaderKey);
                 if (!String.IsNullOrEmpty(urlUploader))
                 {
-                    // MessageBox.Show(urlUploader);
-                    // MessageBox.Show(_configManager.UrlUploader);
                     _configManager.UrlUploader = urlUploader;
                     LogText("UrlUploader:" + _configManager.UrlUploader);
-                    // MessageBox.Show(_configManager.UrlUploader);
+                  
                 }
- 
+                var prefferDriver = nameValue.Get(ConfigManager.PrefferDriverKey);
+                if (!String.IsNullOrEmpty(prefferDriver))
+                {
+                    _configManager.PrefferDriver = prefferDriver;
+                    LogText("PrefferDriver:" + _configManager.PrefferDriver);
+                   
+                }
                 var showScanners = nameValue.Get(ConfigManager.ShowScannersKey);
                 if (!String.IsNullOrEmpty(showScanners))
                 {
@@ -551,7 +555,8 @@ namespace testdotnettwain
  
         private void About_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version Publisher:" + _version + "  All right resrved Guardian system LTD 2014");
+            var ver = "1.0.0.0";
+            MessageBox.Show("Version Publisher:" + _version + "  All right resrved Lior  LTD 2016" + "version deployment:" + ver);
         }
  
         private void RestartWia_Click(object sender, EventArgs e)

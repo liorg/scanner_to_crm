@@ -212,13 +212,14 @@ namespace TwainLib
 
 
 
-        public void Acquire()
+        public void Acquire(string dsPreffer)
         {
 
             Log("Begin Acquire...");
+           if (!String.IsNullOrEmpty(dsPreffer))
+               Log("Preffer Driver " + dsPreffer);
 
-
-
+           // var dsPreffer = "WIA-HP Scanjet G2410";// "HP Scanjet G2410 TWAIN";
             TwRC rc;
 
             CloseSrc();
@@ -240,40 +241,44 @@ namespace TwainLib
 
             if (!allowSelectScanner)
             {
-
-                //Find WIA Contain ver 1.0.0.1 
-
-                int driverScount;
-
-                Log("Allow Select Scanner is Disable ,try find WIA Scanner Driver...");
-
-                var isFoundWIA = SelectByWIAPrefer(out driverScount);
-
-                if (!isFoundWIA)
+                if (!String.IsNullOrEmpty(dsPreffer))
+                    SetDataSource(dsPreffer);
+                else
                 {
+                    //Find WIA Contain ver 1.0.0.1 
 
-                    if (driverScount > 1)
+                    int driverScount;
+
+                    Log("Allow Select Scanner is Disable ,try find WIA Scanner Driver...");
+
+                    var isFoundWIA = SelectByWIAPrefer(out driverScount);
+
+                    if (!isFoundWIA)
                     {
 
-                        Log("Found more then one driver" + driverScount.ToString() + " select  driver... ");
+                        if (driverScount > 1)
+                        {
 
-                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.UserSelect, srcds);
+                            Log("Found more then one driver" + driverScount.ToString() + " select  driver... ");
+
+                            rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.UserSelect, srcds);
+
+
+
+                        }
+
+                        else
+
+                            rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
 
 
 
                     }
 
-                    else
-
-                        rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetDefault, srcds);
-
-
-
+                    Log(" preffer driver WIA Found... ");
                 }
-
-                Log(" preffer driver WIA Found... ");
-
             }
+      
 
             rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.OpenDS, srcds);
 
@@ -403,19 +408,14 @@ namespace TwainLib
             {
 
                 rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetNext, srcds);
-
                 Log("Get next driver " + srcds.ProductName);
-
                 if (saveFirstName != srcds.ProductName)
                 {
-
                     countDrivers++;
-
                 }
 
                 else
                 {
-
                     Log("some drivers go  next driver " + srcds.ProductName);
 
                 }
@@ -424,22 +424,50 @@ namespace TwainLib
 
                 if (getdriversWIA.Where(c => string.Compare(srcds.ProductName, c, StringComparison.OrdinalIgnoreCase) == 0).Any())
                 {
-
                     Log("Found wia" + srcds.ProductName);
-
                     return true;
-
                 }
-
-
-
             }
-
             return false;
-
         }
 
 
+        public bool SetDataSource(string ds)
+        {
+
+            //var driverBeginWith = "WIA";
+
+
+            TwRC rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetFirst, srcds);
+
+            Log("Get first driver " + srcds.ProductName);
+
+
+            // if (srcds.ProductName.ToLower().Contains(driverBeginWith))
+
+            if ( string.Compare(srcds.ProductName, ds, StringComparison.OrdinalIgnoreCase) == 0) 
+            {
+
+                Log("XFound wia" + srcds.ProductName);
+
+                return true;
+
+            }
+            rc = TwRC.Success;
+
+            while (rc == TwRC.Success)
+            {
+
+                rc = DSMident(appid, IntPtr.Zero, TwDG.Control, TwDAT.Identity, TwMSG.GetNext, srcds);
+                Log("Get next driver " + srcds.ProductName);
+                if (string.Compare(srcds.ProductName, ds, StringComparison.OrdinalIgnoreCase) == 0) 
+                 return true;
+                else
+                 Log("some drivers go  next driver " + srcds.ProductName);
+
+            }
+            return false;
+        }
 
 
 

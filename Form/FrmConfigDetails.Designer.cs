@@ -39,6 +39,8 @@ namespace ScannerToCrm
             this.label3 = new System.Windows.Forms.Label();
             this.chkWIA = new System.Windows.Forms.CheckBox();
             this.chkDeleteFileAfterUploading = new System.Windows.Forms.CheckBox();
+            this.lblPreferDriver = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -95,7 +97,7 @@ namespace ScannerToCrm
             // lblUri
             // 
             this.lblUri.AutoSize = true;
-            this.lblUri.Location = new System.Drawing.Point(81, 156);
+            this.lblUri.Location = new System.Drawing.Point(83, 155);
             this.lblUri.Name = "lblUri";
             this.lblUri.Size = new System.Drawing.Size(16, 13);
             this.lblUri.TabIndex = 7;
@@ -104,7 +106,7 @@ namespace ScannerToCrm
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 156);
+            this.label3.Location = new System.Drawing.Point(17, 155);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 6;
@@ -132,11 +134,31 @@ namespace ScannerToCrm
             this.chkDeleteFileAfterUploading.Text = "Delete File After Uploading";
             this.chkDeleteFileAfterUploading.UseVisualStyleBackColor = true;
             // 
+            // lblPreferDriver
+            // 
+            this.lblPreferDriver.AutoSize = true;
+            this.lblPreferDriver.Location = new System.Drawing.Point(89, 254);
+            this.lblPreferDriver.Name = "lblPreferDriver";
+            this.lblPreferDriver.Size = new System.Drawing.Size(16, 13);
+            this.lblPreferDriver.TabIndex = 11;
+            this.lblPreferDriver.Text = "...";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(17, 254);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(72, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Driver Preffer:";
+            // 
             // FrmConfigDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 252);
+            this.ClientSize = new System.Drawing.Size(498, 295);
+            this.Controls.Add(this.lblPreferDriver);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.chkDeleteFileAfterUploading);
             this.Controls.Add(this.chkWIA);
             this.Controls.Add(this.lblUri);
@@ -165,6 +187,8 @@ namespace ScannerToCrm
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chkWIA;
         private System.Windows.Forms.CheckBox chkDeleteFileAfterUploading;
+        private System.Windows.Forms.Label lblPreferDriver;
+        private System.Windows.Forms.Label label4;
 
         //public FrmConfigDetails()
         //{
