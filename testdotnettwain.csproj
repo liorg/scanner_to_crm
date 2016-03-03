@@ -199,24 +199,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Web References\Crmdiscovery\Reference.cs">
-      <DependentUpon>Reference.map</DependentUpon>
-      <SubType>code</SubType>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Web References\CrmMetadata\Reference.cs">
-      <DependentUpon>Reference.map</DependentUpon>
-      <SubType>code</SubType>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Web References\CrmSdk\Reference.cs">
-      <DependentUpon>Reference.map</DependentUpon>
-      <SubType>code</SubType>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Content Include="App.ico" />
     <None Include="Service References\UploadLargeImages\ServiceFileTransferService.disco" />
     <None Include="Docs\TWAIN-2.3-Spec.pdf" />
@@ -255,50 +237,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="testdotnettwain_TemporaryKey.pfx" />
-    <None Include="Web References\Crmdiscovery\Crmdiscoveryservice.wsdl" />
-    <None Include="Web References\Crmdiscovery\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\Crmdiscovery\Response.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\CrmMetadata\MetadataService.disco" />
-    <None Include="Web References\CrmMetadata\MetadataService.wsdl" />
-    <None Include="Web References\CrmMetadata\MetadataServiceResponse.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\CrmMetadata\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\CrmSdk\BusinessEntity.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\CrmSdk\BusinessEntityCollection.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\CrmSdk\CrmServiceWsdl.wsdl" />
-    <None Include="Web References\CrmSdk\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\CrmSdk\Response.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
     <WebReferences Include="Web References\" />
-    <WebReferenceUrl Include="C:\Projects\Scaner crm4 32bit\Crmdiscoveryservice.wsdl">
-      <RelPath>Web References\Crmdiscovery\</RelPath>
-      <UrlBehavior>Static</UrlBehavior>
-    </WebReferenceUrl>
-    <WebReferenceUrl Include="https://172.18.4.156/MSCRMServices/2007/CrmServicewsdl.aspx">
-      <RelPath>Web References\CrmSdk\</RelPath>
-      <UrlBehavior>Static</UrlBehavior>
-    </WebReferenceUrl>
-    <WebReferenceUrl Include="https://172.18.4.156/MSCRMServices/2007/MetadataService.asmx">
-      <RelPath>Web References\CrmMetadata\</RelPath>
-      <UrlBehavior>Static</UrlBehavior>
-    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
