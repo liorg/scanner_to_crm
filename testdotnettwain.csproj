@@ -200,6 +200,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Content Include="App.ico" />
+    <None Include="Docs\הסבר על הסורק.docx" />
     <None Include="Service References\UploadLargeImages\ServiceFileTransferService.disco" />
     <None Include="Docs\TWAIN-2.3-Spec.pdf" />
     <None Include="Service References\UploadLargeImages\Reference.svcmap">
